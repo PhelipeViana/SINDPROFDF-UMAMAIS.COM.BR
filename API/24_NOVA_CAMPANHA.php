@@ -54,5 +54,5 @@ for ($i=0; $i < count($dados); $i++) {
 }
 
 echo json_encode(['numbers'=>$cont,'st'=>1,'id_camp'=>$ID_CAMPANHA]);
-$sql_alter="UPDATE `campanha_envios` SET `num_envio`='$cont' WHERE `id_cam_envio`='$ID_CAMPANHA'";
+$sql_alter="UPDATE `campanha_envios` SET msg='$nomecamp',`num_envio`='$cont' WHERE `id_cam_envio`='$ID_CAMPANHA'";
 $e_alter=mysqli_query($conn,$sql_alter);

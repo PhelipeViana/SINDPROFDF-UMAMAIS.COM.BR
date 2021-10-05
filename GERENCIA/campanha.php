@@ -99,7 +99,7 @@
 					<td scope="row">${response[i].num_envio}</td>
 					
 					<td>
-					<a class='btn btn-danger' href="CAMPANHA_ENVIO.php?id=${response[i].id_cam_envio}"
+					<a class='btn btn-danger' href="CAMPANHA_ENVIO.php?id=${response[i].id_cam_envio}&limit=100"
 					target='_blank'>
 					INICIAR <i class="fa fa-arrow-right" aria-hidden="true"></i>
 					</a>
