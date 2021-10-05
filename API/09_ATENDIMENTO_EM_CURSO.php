@@ -11,8 +11,9 @@ CAR.ativo as spam,
 C.nome_canalzapio,
 C.id_canalzapio,
 C.token_canalzapio,
+CONT.id_carregamento,
+CONT.ref_grupo_hastag
 
-CONT.id_carregamento
 FROM `atendimento_pendente` AS PEN
 left join carregamento_contato as CAR
 ON PEN.phone_atendimento=CAR.phone_carregamento

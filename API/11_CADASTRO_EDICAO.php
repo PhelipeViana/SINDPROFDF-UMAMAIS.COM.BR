@@ -5,6 +5,8 @@ $nome=nomeCase($nome);
 $numero=noInjection($_REQUEST['numero']);
 $foto=$_REQUEST['foto'];
 $canal=$_REQUEST['canal'];
+$grupo=$_REQUEST['grupo'];
+
 
 
 $sql_existe="SELECT * FROM `carregamento_contato` WHERE `phone_carregamento`='$numero'";
@@ -15,7 +17,8 @@ if ($num_existe > 0) {
 	// EDITAR
 	$sql_edita="UPDATE `carregamento_contato` SET 
 	`nome_carregamento`='$nome',
-	foto_carregamento='$foto'
+	foto_carregamento='$foto',
+	ref_grupo_hastag='$grupo'
 	WHERE `phone_carregamento`='$numero'";
 	$exe_edita=mysqli_query($conn,$sql_edita);
 	if($exe_edita){
@@ -30,7 +33,8 @@ if ($num_existe > 0) {
 	`nome_carregamento`,
 	foto_carregamento,
 	`phone_carregamento`,
-	IDREFCANAL) VALUES ('$nome','$foto','$numero','$canal')";
+	ref_grupo_hastag
+	IDREFCANAL) VALUES ('$nome','$foto','$numero','$canal','$grupo')";
 	$exe_insert=mysqli_query($conn,$sql_insert);
 	if($exe_insert){
 		echo json_encode(['msg'=>'Cadastrado com sucesso!','st'=>1]);
