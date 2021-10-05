@@ -10,6 +10,17 @@ $validador_usuario=$_SESSION['token']; //INSERIR O NOME DA SESSAO DO LOGADO
 
 <script>
 	const READ = {
+		tags_geral: function() {
+			$.ajax({
+					url: '<?= $ENDPOINT; ?>',
+					type: 'POST',
+					dataType: 'json',
+					data: DADOS.PARS('28'),
+				})
+				.done(function(response) {
+					ret_tags_geral(response)
+				})
+		},
 		select_arquivos: function(midia=0){ 
 			$.ajax({
 				url: '<?=$ENDPOINT?>',
@@ -61,12 +72,12 @@ $validador_usuario=$_SESSION['token']; //INSERIR O NOME DA SESSAO DO LOGADO
 
 			})	
 		},
-		perfil_cliente_campanha2:function(){
+		perfil_cliente_campanha2:function(id_grupo,text_grupo){
 			$.ajax({
 				url: '<?=$ENDPOINT;?>',
 				type: 'POST',
 				dataType: 'json',
-				data: DADOS.CLASSE_CHECK('24','tagescolha'),
+				data: DADOS.CLASSE_CHECK('24','tagescolha',id_grupo,text_grupo),
 			})
 			.done(function(response) {
 				nova_camapanha(response)
@@ -97,12 +108,12 @@ $validador_usuario=$_SESSION['token']; //INSERIR O NOME DA SESSAO DO LOGADO
 
 			})	
 		},
-		contatos:function(pagina=100,pesquisa=0){
+		contatos:function(pagina=100,pesquisa=0,grupo=-1){
 			$.ajax({
 				url: '<?=$ENDPOINT;?>',
 				type: 'POST',
 				dataType: 'json',
-				data: DADOS.PARS('15',pagina,pesquisa),
+				data: DADOS.PARS('15',pagina,pesquisa,grupo),
 			})
 			.done(function(response) {
 				readcontatos(response)
@@ -282,7 +293,7 @@ $validador_usuario=$_SESSION['token']; //INSERIR O NOME DA SESSAO DO LOGADO
 			
 			return obj;
 		},
-		CLASSE_CHECK:function(auth,cl,p1=0){
+		CLASSE_CHECK:function(auth,cl,p1=0,p2=0){
 			let classe=document.getElementsByClassName(cl);
 			let json={};
 			let obj=[];
@@ -295,6 +306,8 @@ $validador_usuario=$_SESSION['token']; //INSERIR O NOME DA SESSAO DO LOGADO
 			json['JSON']=obj;
 			json['auth']=auth;
 			json['p1']=p1;
+			json['p2']=p2;
+			
 			
 			return json;
 		},

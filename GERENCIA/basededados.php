@@ -12,19 +12,26 @@
 		<hr>
 		<div>
 			<div class="row">
-				<div class="col-md-6">
+				<div class="col-md-4">
 					<label for="">Pesquisa</label>
 					<div class="row">
-						<input type="text" class="form-control" placeholder="Nome ou numero" id="input_pesquisa">
-						<button class="btn btn-danger" id="btn_pesquisa"><i class="fa fa-search"></i></button>
+						<input type="text" class="form-control" placeholder="Nome ou numero" id="input_pesquisa" style="height: 34px !important;">
 					</div>
 				</div>
-				<div class="col-md-6">
-					
+				<div class="col-md-4">
+					<label for="">Grupo unitário</label>
+					<select name="grupo" id="select_group" class="form-control"></select>
+				</div>
+				<div class="col-md-2">
+
 					<label for="">Limite</label>
 					<select id="select_limit" class="form-control"></select>
 				</div>
-				
+
+				<div class="col-md-2" style="padding-top: 23px;">
+					<button class="btn btn-danger btn-block" id="btn_pesquisa"><i class="fa fa-search"></i></button>
+				</div>
+
 			</div>
 			<br><br>
 		</div>
@@ -35,11 +42,11 @@
 
 					<th scope="col">#</th>
 					<th scope="col">Nome</th>
-					<th scope="col">Contato</th>	
-					<th scope="col">Canal</th>	
-					<th scope="col">#Edição</th>			
+					<th scope="col">Contato</th>
+					<th scope="col">Canal</th>
+					<th scope="col">#Edição</th>
 				</tr>
-			<!-- 	<tr>
+				<!-- 	<tr>
 					<th colspan='4'>
 						<label for="">Pesquise</label>
 						<input type="text" class='form-control' pleaceholder='Pesquise' id='filtro_nome_cadastrados'>
@@ -48,9 +55,9 @@
 			</thead>
 			<tbody id='corpo_cadastrados'>
 
-			</tbody>			
+			</tbody>
 		</table>
-		
+
 	</div>
 </div>
 <div class="modal fade" id="modal_gerenciar_hastag" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -63,30 +70,29 @@
 				</button>
 			</div>
 
-			
+
 			<div class="modal-body">
 				<table class="table">
 					<thead>
 						<tr>
 							<th colspan="2">
-								<input type="text" class="form-control" placeholder="Nome Tag"
-								id="input_nova_tag">
+								<input type="text" class="form-control" placeholder="Nome Tag" id="input_nova_tag">
 							</th>
 
 							<th colspan="2">
 								<button class="btn btn-block" id="btn_add_tag">Adicionar</button>
 							</th>
-							
+
 						</tr>
 						<tr>
 							<th scope="col"><i class="fa fa-users" aria-hidden="true"></i></th>
-							
+
 							<th scope="col">#nome</th>
 							<th scope="col" colspan="2">STATUS</th>
 						</tr>
 					</thead>
 					<tbody id='list_hastag'>
-						
+
 					</tbody>
 				</table>
 			</div>
@@ -144,9 +150,9 @@
 					<input type="hidden" id="input_canal" name="canal">
 
 
-				</div>
-				<div class="modal-footer">
-					<button type="submit" class="btn btn-primary">Salvar</button>
+			</div>
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-primary">Salvar</button>
 				</form>
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">FECHAR</button>
 			</div>
@@ -156,39 +162,54 @@
 
 <script>
 	READ.contatos();
-	$("#btn_pesquisa").on('click',function(e){
-		let valor= $("#input_pesquisa").val()
-		if(valor==""){
-			$("#input_pesquisa").focus()
-		}else{
-			let corpo_ret="";
-			corpo_ret=`<h1>${valor}</h1> <button class='btn btn-link' id='limpa_pesquisa'>Limpar pesquisa</button> `;
-			READ.contatos(0,valor);
-			$("#retorno_das_pesquisas").html(corpo_ret)
+	READ.tags_geral()
+
+	function ret_tags_geral(response) {
+		let corpo = "";
+		corpo += ` 
+		<option value='-1'>ESCOLHA O GRUPO</option>
+		<option value='0'>TODOS SEM GRUPO</option>
+		`
+		let indice = response.ret
+		for (let i = 0; i < indice.length; i++) {
+			corpo += ` <option value='${indice[i].idhastag}'>${indice[i].nomehastag}</option> `
 		}
+		$("#select_group").html(corpo)
+	}
+	$("#btn_pesquisa").on('click', function(e) {
+		let valor = $("#input_pesquisa").val()
+		let valor_grupo = $("#select_group").val()
+		let valor_grupo_text = $("#select_group option:selected").text();
+		let corpo_ret = "";
 
-		$("#limpa_pesquisa").on('click',function(e){
-			
+
+		corpo_ret = `<h1>${valor+' ('+valor_grupo_text+') '}</h1> <button class='btn btn-link' id='limpa_pesquisa'>Limpar pesquisa</button> `;
+		READ.contatos(0, valor, valor_grupo);
+		$("#retorno_das_pesquisas").html(corpo_ret)
+
+		$("#limpa_pesquisa").on('click', function(e) {
+
 			READ.contatos();
-				$("#retorno_das_pesquisas").html('') //LIMPA O RESULTADO DA PESQUISA
-				$("#input_pesquisa").val('');
+			$("#retorno_das_pesquisas").html('') //LIMPA O RESULTADO DA PESQUISA
+			$("#input_pesquisa").val('');
+			$("#select_group").val(-1)
 
-			})
+		})
 
 	})
 
-	function readcontatos(response){
-		let indice=response.ret;
-		let corpo="";
-		corpo=`
+	function readcontatos(response) {
+		let indice = response.ret;
+		let corpo = "";
+		corpo = `
 		<tr colspan='3'>CARREGANDO...</tr> 
 
 		`
-		
-		if(indice!==null){
-			corpo="";
-			for(let i=0;i< indice.length;i++){
-				corpo+=`
+
+		if (indice !== null) {
+			corpo = "";
+			for (let i = 0; i < indice.length; i++) {
+				corpo += `
 				<tr>
 				<td>
 				${[i+1]}
@@ -201,8 +222,8 @@
 				<td>${indice[i].nome_canalzapio}</td>
 				`
 
-				if(indice[i].ativo==1){
-					corpo+=`<td>
+				if (indice[i].ativo == 1) {
+					corpo += `<td>
 					<div class="btn-group" role="group" aria-label="Basic example">
 					
 					<button type="button" class="btn btn-success classificar" data-id='${indice[i].id_carregamento}'>
@@ -227,19 +248,19 @@
 					</div>				
 					</td>`
 
-				}else{
-					corpo+=`<td>
+				} else {
+					corpo += `<td>
 					INATIVO		
 					</td>`
 
 				}
 
-				corpo+=`</tr> 
+				corpo += `</tr> 
 
 				`
 			}
-		}else{
-			corpo+=`
+		} else {
+			corpo += `
 			<tr colspan='3'>NÃO HÁ REGISTRO(S)</tr> 
 
 			`
@@ -248,48 +269,49 @@
 
 		$("#corpo_cadastrados").html(corpo)
 		$("#num_db").html(response.num);
-		let num_paginas=Math.ceil(response.num/100);
-		let corpo_select="";
+		let num_paginas = Math.ceil(response.num / 100);
+		let corpo_select = "";
 		//select_limit
-		for(let i=1; i < num_paginas;i++){
-			
-			corpo_select+=` 
+		for (let i = 1; i < num_paginas; i++) {
+
+			corpo_select += ` 
 			<option value='${[i*100]}'>${[i*100]}</option>
 			`
 		}
-		corpo_select+=` 
+		corpo_select += ` 
 		<option value='${response.num}'>TODOS</option>
 		`
-		
-		$("#select_limit")
-		.html(corpo_select)
-		.on('change',function(e){
-			let qtde=$(this).val()
 
-			READ.contatos(qtde);
-			//limpa pesquisa se houver
+		$("#select_limit")
+			.html(corpo_select)
+			.on('change', function(e) {
+				let qtde = $(this).val()
+
+				READ.contatos(qtde);
+				//limpa pesquisa se houver
 				$("#retorno_das_pesquisas").html('') //LIMPA O RESULTADO DA PESQUISA
 				$("#input_pesquisa").val('');
+
 			})
 
 		$("#select_limit").val(response.pagina) //iniciar da base de pesquisa
 
-		$(".classificar").on('click',function(e){
-			let id=$(this).data('id');
-			READ.hast_cliente(id)     
+		$(".classificar").on('click', function(e) {
+			let id = $(this).data('id');
+			READ.hast_cliente(id)
 		})
-		$('.adicionar').on('click',function(e){
-			let num=$(this).data('num');
-			let nome=$(this).data('nome');
-			let foto=$(this).data('foto');
-			let canal=$(this).data('canal');
+		$('.adicionar').on('click', function(e) {
+			let num = $(this).data('num');
+			let nome = $(this).data('nome');
+			let foto = $(this).data('foto');
+			let canal = $(this).data('canal');
 
 
-			let retorno="";
-			if(nome==""){
-				retorno='NÃO CADASTRADO';
-			}else{
-				retorno=nome;
+			let retorno = "";
+			if (nome == "") {
+				retorno = 'NÃO CADASTRADO';
+			} else {
+				retorno = nome;
 			}
 
 			$("#input_nome").val(nome)
@@ -301,20 +323,20 @@
 			$("#titulo_numero").html(retorno)
 			$("#modal_cadastro").modal('show');
 		})
-		$(".msg_ger").on('click',function(e){
-			let id=$(this).data('id');
-			let tk=$(this).data('tk');
-			let num=$(this).data('num');
-			let nome=$(this).data('nome');
-			let canal=$(this).data('canal');
+		$(".msg_ger").on('click', function(e) {
+			let id = $(this).data('id');
+			let tk = $(this).data('tk');
+			let num = $(this).data('num');
+			let nome = $(this).data('nome');
+			let canal = $(this).data('canal');
 
 
-			let msg=prompt('Qual é a mensagem para:\n'+nome+'?');
-			if(msg){
-				enviandoMensagemTexto(id,tk,num,msg,canal);
+			let msg = prompt('Qual é a mensagem para:\n' + nome + '?');
+			if (msg) {
+				enviandoMensagemTexto(id, tk, num, msg, canal);
 			}
 
-			
+
 		});
 
 	}
@@ -323,7 +345,8 @@
 		UPDATE.cadastramento("form_cadastro")
 
 	});
-	function  updatecadastramento(response){
+
+	function updatecadastramento(response) {
 		$("#modal_cadastro").modal('hide');
 		alert(response.msg);
 		//atualiza a lista
@@ -333,66 +356,67 @@
 	}
 
 
-	$("#btn_gerenciar_hastag").on('click',function(e){
+	$("#btn_gerenciar_hastag").on('click', function(e) {
 		$("#modal_gerenciar_hastag").modal('show')
 		READ.hastags()
 
 	})
 
-	
-	$("#btn_add_tag").on('click',function(e){
-		let nome_tag=$("#input_nova_tag").val();
-		if(nome_tag.length > 0){
-			CREATE.hastags(0,1,nome_tag);
 
-		}else{
+	$("#btn_add_tag").on('click', function(e) {
+		let nome_tag = $("#input_nova_tag").val();
+		if (nome_tag.length > 0) {
+			CREATE.hastags(0, 1, nome_tag);
+
+		} else {
 			$("#input_nova_tag").focus()
 		}
 	})
-	function retacaohastags(response){
-		let indice=response.indice;
+
+	function retacaohastags(response) {
+		let indice = response.indice;
 		switch (indice) {
 			case 1:
-			if(response.st==1){
-				READ.hastags();
-				$("#input_nova_tag").val('').css('color','black')
-			}
-			if(response.st==2){
-				alert('HASTAG JÁ EXISTE');
-				$("#input_nova_tag")
-				.css('color','red')
-				.focus()
+				if (response.st == 1) {
+					READ.hastags();
+					$("#input_nova_tag").val('').css('color', 'black')
+				}
+				if (response.st == 2) {
+					alert('HASTAG JÁ EXISTE');
+					$("#input_nova_tag")
+						.css('color', 'red')
+						.focus()
 
-			}
-			break;
+				}
+				break;
 			case 2:
 
-			READ.hastags()
-			break;
+				READ.hastags()
+				break;
 			case 3:
-			READ.hastags()
+				READ.hastags()
 
-			break;
+				break;
 		}
 	}
 
-	function retmontarhastags(response){
-		let indice=response.ret;
+	function retmontarhastags(response) {
+		let indice = response.ret;
 
-		let corpo="";
-		if(indice!==null){
-			for(let i=0;i < indice.length;i++){
-				let comando=""
-				if(indice[i].ativohastag=='1'){
-					comando+=`
+		let corpo = "";
+		if (indice !== null) {
+			for (let i = 0; i < indice.length; i++) {
+				let comando = ""
+				if (indice[i].ativohastag == '1') {
+					comando += `
 					<button class='btn btn-primary btn-block inativar' data-id='${indice[i].idhastag}'>ATIVO</button>
 					`
-				}else{
-					comando+=`
+				} else {
+					comando += `
 					<button class='btn btn-danger btn-block ativar' data-id='${indice[i].idhastag}'>INATIVO</button>
 					`
 				}
-				corpo+=`
+				corpo += `
 				<tr>
 
 				<td>${indice[i].qdecad}</td>
@@ -402,40 +426,41 @@
 
 				`
 			}
-		}else{
-			corpo="CARREGANDO...";
+		} else {
+			corpo = "CARREGANDO...";
 		}
 		$("#list_hastag").html(corpo)
-		$(".inativar").on('click',function(e){
-			let id=$(this).data('id')
-			let ok=confirm('Deixar cadastrar pessoas com essas hastags?')
-			if(ok){
-				CREATE.hastags(id,3);
+		$(".inativar").on('click', function(e) {
+			let id = $(this).data('id')
+			let ok = confirm('Deixar cadastrar pessoas com essas hastags?')
+			if (ok) {
+				CREATE.hastags(id, 3);
 			}
 
 		})
-		$(".ativar").on('click',function(e){
-			let id=$(this).data('id')
-			let ok=confirm('Cadastrar pessoas com essas hastags?')
-			if(ok){
-				CREATE.hastags(id,2);
+		$(".ativar").on('click', function(e) {
+			let id = $(this).data('id')
+			let ok = confirm('Cadastrar pessoas com essas hastags?')
+			if (ok) {
+				CREATE.hastags(id, 2);
 
 			}
 
 		})
 	}
-	function readhast_cliente(response){
-		let indice=response.TAGS;
-		let corpo="";
-		if(indice!==null){
-			for(let i=0; i < indice.length; i++){
-				let comandoativo="";
-				if(indice[i].ativo > 0){
-					comandoativo+=`
+
+	function readhast_cliente(response) {
+		let indice = response.TAGS;
+		let corpo = "";
+		if (indice !== null) {
+			for (let i = 0; i < indice.length; i++) {
+				let comandoativo = "";
+				if (indice[i].ativo > 0) {
+					comandoativo += `
 					<button class='btn btn-success desativar' data-id='${indice[i].idhastag}' data-user='${indice[i].id}'>ATIVO</button>
 					`
-				}else{
-					comandoativo+=`
+				} else {
+					comandoativo += `
 					<button class='btn btn-secondary ativar' data-id='${indice[i].idhastag}' 
 					data-user='${indice[i].id}'>INATIVO</button>
 					`
@@ -443,7 +468,7 @@
 				}
 
 
-				corpo+=`
+				corpo += `
 				<tr>
 				<td>${indice[i].nomehastag}</td>
 				<td>
@@ -452,8 +477,8 @@
 				</tr>
 				`
 			}
-		}else{
-			corpo+=`
+		} else {
+			corpo += `
 			<tr colspan='2'>
 			<td>
 			<h1>NENHUMA TAG ATIVA</h1>
@@ -464,71 +489,71 @@
 
 		$("#corpo_table_hast").html(corpo)
 		$("#modal_tags").modal('show')
-		$(".desativar").on('click',function(e){
+		$(".desativar").on('click', function(e) {
 			$(this)
-			.attr('disabled',true)
-			.html('..aguarde')
-			let id=$(this).data('id');
-			let user=$(this).data('user');
-			UPDATE.atualiza_hatgs(0,id,user)
+				.attr('disabled', true)
+				.html('..aguarde')
+			let id = $(this).data('id');
+			let user = $(this).data('user');
+			UPDATE.atualiza_hatgs(0, id, user)
 
 		})
-		$(".ativar").on('click',function(e){
+		$(".ativar").on('click', function(e) {
 			$(this)
-			.attr('disabled',true)
-			.html('..aguarde')
-			let id=$(this).data('id');
-			let user=$(this).data('user');
-			UPDATE.atualiza_hatgs(1,id,user)
+				.attr('disabled', true)
+				.html('..aguarde')
+			let id = $(this).data('id');
+			let user = $(this).data('user');
+			UPDATE.atualiza_hatgs(1, id, user)
 
 		})
 	}
 
 
-	$(function(){
-		$("#filtro_nome_cadastrados").keyup(function(){ 
+	$(function() {
+		$("#filtro_nome_cadastrados").keyup(function() {
 
 			var index = $("#filtro_nome_cadastrados").parent().index();
-			var nth = "#tabela_investidor td:nth-child("+(index+1).toString()+")";
+			var nth = "#tabela_investidor td:nth-child(" + (index + 1).toString() + ")";
 			var valor = $(this).val().toUpperCase();
 			$("#tabela_investidor tbody tr").show();
-			$(nth).each(function(){
-				if($(this).text().toUpperCase().indexOf(valor) < 0){
+			$(nth).each(function() {
+				if ($(this).text().toUpperCase().indexOf(valor) < 0) {
 					$(this).parent().hide();
 				}
 			});
 
 		});
 
-		$("#tabela_investidor input").blur(function(){
+		$("#tabela_investidor input").blur(function() {
 			$(this).val("");
-		}); 
+		});
 	});
 
-	function enviandoMensagemTexto(ID,TOKEN,NUMERO,MENSAGEM,CANAL) {
-		let obj={
-			ID:ID,
-			TOKEN:TOKEN,
-			NUMERO:NUMERO,
-			MENSAGEM:MENSAGEM,
-			CANAL:CANAL,
-			ATENDENTE:"<?=$row['nome_acesso']?>",
-			REF_IDATENDENTE_MSG:"<?=$row['id_acesso']?>"
+	function enviandoMensagemTexto(ID, TOKEN, NUMERO, MENSAGEM, CANAL) {
+		let obj = {
+			ID: ID,
+			TOKEN: TOKEN,
+			NUMERO: NUMERO,
+			MENSAGEM: MENSAGEM,
+			CANAL: CANAL,
+			ATENDENTE: "<?= $row['nome_acesso'] ?>",
+			REF_IDATENDENTE_MSG: "<?= $row['id_acesso'] ?>"
 		}
 		$.ajax({
-			url: 'GERENCIA/zapio/texto.php',
-			type: 'POST',
-			dataType: 'json',
-			data: obj
-		})
-		.done(function(response) {
-			if(response.st==1){
-				alert('Enviado com sucesso!');
-			}else{
-				alert('Ops! Erro ao enviar')
-			}
+				url: 'GERENCIA/zapio/texto.php',
+				type: 'POST',
+				dataType: 'json',
+				data: obj
+			})
+			.done(function(response) {
+				if (response.st == 1) {
+					alert('Enviado com sucesso!');
+				} else {
+					alert('Ops! Erro ao enviar')
+				}
 
 
-		})
+			})
 	}
 </script>

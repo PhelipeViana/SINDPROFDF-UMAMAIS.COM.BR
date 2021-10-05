@@ -3,6 +3,16 @@
 $pagina_limite=$_REQUEST['p1']; //indice da pagina
 $pesquisa=$_REQUEST['p2']; //indice da pagina
 $PAGINACAO='LIMIT 1  , '.$pagina_limite;
+$pesquisa=$_REQUEST['p2']; //indice da pagina
+$grupo=$_REQUEST['p3']; //indice do grupo a pesquisar
+if($grupo >-1){
+	$COMANDO_GRUPO="AND ref_grupo_hastag=$grupo";
+}else{
+	$COMANDO_GRUPO="";
+}
+
+
+
 
 if ($pesquisa=='0') {
 	$sql="SELECT 
@@ -24,7 +34,7 @@ if ($pesquisa=='0') {
 	*
 	FROM `carregamento_contato` as C 
 	left join canaiszapio as Z 
-	ON C.IDREFCANAL=Z.idcanalzapio where CONCAT (C.nome_carregamento, C.phone_carregamento)  LIKE '%$pesquisa%'";
+	ON C.IDREFCANAL=Z.idcanalzapio where CONCAT (C.nome_carregamento, C.phone_carregamento)  LIKE '%$pesquisa%' $COMANDO_GRUPO";
 	$exe=mysqli_query($conn,$sql);
 	$num_pesquisa=mysqli_num_rows($exe);
 	

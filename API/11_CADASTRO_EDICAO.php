@@ -33,7 +33,7 @@ if ($num_existe > 0) {
 	`nome_carregamento`,
 	foto_carregamento,
 	`phone_carregamento`,
-	ref_grupo_hastag
+	ref_grupo_hastag,
 	IDREFCANAL) VALUES ('$nome','$foto','$numero','$canal','$grupo')";
 	$exe_insert=mysqli_query($conn,$sql_insert);
 	if($exe_insert){

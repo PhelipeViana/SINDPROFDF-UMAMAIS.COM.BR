@@ -59,7 +59,7 @@
 						<input type="text" id="text_msg_campa" class="form-control text-justify" name="msg">
 						<button class="btn btn-danger btn-block" type="submit">SALVAR</button>
 					</form>
-					
+
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Fechar</button>
@@ -69,20 +69,21 @@
 	</div>
 
 	<script>
+		
 		READ.list_campanha()
 		$("#form_mensagem").submit(function(event) {
 			event.preventDefault();
 			UPDATE.msg_campanha("form_mensagem")
 		});
 
-		
-		
-		function retlist_campanha(response){
-			let corpo="";
 
-			if(response!==null){
-				for(let i=0;i<response.length;i++){
-					corpo+=` 
+
+		function retlist_campanha(response) {
+			let corpo = "";
+
+			if (response !== null) {
+				for (let i = 0; i < response.length; i++) {
+					corpo += ` 
 					<tr>
 					<th scope="row">${response[i].id_cam_envio}</th>
 					<td class='text-justify'>
@@ -118,108 +119,126 @@
 				}
 			}
 			$("#listagem_campanhas").html(corpo)
-			$(".alter_msg").on('click',function(e){
-				let msg=$(this).data('msg');
-				let midia=$(this).data('midia');
+			$(".alter_msg").on('click', function(e) {
+				let msg = $(this).data('msg');
+				let midia = $(this).data('midia');
 
-				
-				let id=$(this).data('id');
 
-				$("#modal_msg_envio").modal('show');	
+				let id = $(this).data('id');
+
+				$("#modal_msg_envio").modal('show');
 				$("#text_msg_campa").val(msg)
 				$("#input_id_campanha").val(id);
-				
-				
+
+
 			})
 
-			
-			
+
+
 
 		}
-		function list_arquivos(response,valor){
-			let corpo="";
-			corpo+=`<option value='0'>MENSAGEM TEXTO</option>`
-			let indice=response.ret;
-			if(indice!==null){
-				for(let i=0;i<indice.length;i++){
-					corpo+=`<option value='${indice[i].idArquivo}'>${indice[i].nomeArquivo}</option>`
+
+		function list_arquivos(response, valor) {
+			let corpo = "";
+			corpo += `<option value='0'>MENSAGEM TEXTO</option>`
+			let indice = response.ret;
+			if (indice !== null) {
+				for (let i = 0; i < indice.length; i++) {
+					corpo += `<option value='${indice[i].idArquivo}'>${indice[i].nomeArquivo}</option>`
 				}
 
-			}else{
-				corpo=`<option value='0'>NÃO HÁ MIDIA</option>`
+			} else {
+				corpo = `<option value='0'>NÃO HÁ MIDIA</option>`
 			}
 
 			$("#opcoes_mensagem")
-			.html(corpo)
-			.val(valor)			
+				.html(corpo)
+				.val(valor)
 		}
-		
-		$("#btn_prepara_envio").on('click',function(e){
+
+		$("#btn_prepara_envio").on('click', function(e) {
 			READ.hastagsenvio()
 
 		})
-		function retgravadomsg(response){
-			let status=response.st;
-			if(status==1){
+
+		function retgravadomsg(response) {
+			let status = response.st;
+			if (status == 1) {
 				alert('Sucesso!');
 				$("#modal_msg_envio").modal('hide');
 				READ.list_campanha();
-			}else{
+			} else {
 				alert('Erro 23');
 			}
 		}
 
-		function retmontarhastagsescolha(response){
+		function retmontarhastagsescolha(response) {
 
-			let corpo="";
-			let indice=response.ret;
-			corpo+=`
+			let corpo = "";
+			let indice = response.ret;
+			let corpo_select = "<option value='-1'>DESABILITADO</option>";
+			corpo += `
 			<div class='text-center text-danger'>
 			*Filtrar envio por #tags não obrigatório
 			<hr>
 			</div>
 			`
-			for(let i=0; i < indice.length; i++){
-				let red='';
-				if(indice[i].qdecad < 1){
-					red='text-danger';
-				}else{
-					red='';
+			for (let i = 0; i < indice.length; i++) {
+				let red = '';
+				if (indice[i].qdecad < 1) {
+					red = 'text-danger';
+				} else {
+					red = '';
 				}
-				corpo+=`
+				if (indice[i].qdecad > 0) {
+
+					corpo += `
 				<div>
 				<input type="checkbox" id="escolha_${indice[i].idhastag}" name="escolha" value='${indice[i].idhastag}' class='tagescolha mouse_chose'>
 				<label for="escolha_${indice[i].idhastag}" class='mouse_chose ${red}'>
 				${indice[i].qdecad+' <i class="fa fa-users" aria-hidden="true"></i>- '+indice[i].nomehastag}</label>
 				</div>
 				`
+
+				}
+
+				corpo_select += `<option value='${indice[i].idhastag}'>
+				${indice[i].nomehastag}</option>`
 			}
-			corpo+=`
+
+
+			corpo += `
 			<hr>
 			<div class='text-center'>
+			<label>GRUPO UNITÁRIO</label>
+			<select class='form-control' id='sel_unico'></select>
+			<br>
 			<button type="submit" class="btn btn-danger btn-block" id='btn_criar_campa'>CRIAR CAMPANHA</button>
 			</div>
 			`
 
 			$("#form_envio_massa").html(corpo)
 			$("#modal_perfil_envio").modal('show')
-			$(".mouse_chose").css('cursor','pointer')
+			$(".mouse_chose").css('cursor', 'pointer')
+			$("#sel_unico").html(corpo_select)
 
 		}
 
 		$("#form_envio_massa").submit(function(event) {
 			event.preventDefault();
-			$("#btn_criar_campa").attr('disabled',true)
-
-			READ.perfil_cliente_campanha2();
+			let id_camp = $("#sel_unico").val()
+			let id_camp_text = $("#sel_unico option:selected").text()
+			$("#btn_criar_campa").attr('disabled', true)
+			
+			READ.perfil_cliente_campanha2(id_camp, id_camp_text);
+	
 		});
 
-		function nova_camapanha(response){
-			
+		function nova_camapanha(response) {
+
 			$("#modal_perfil_envio").modal('hide')
-			$("#btn_criar_campa").attr('disabled',false)
-			
+			$("#btn_criar_campa").attr('disabled', false)
+
 			READ.list_campanha();
 		}
-
 	</script>

@@ -1,12 +1,11 @@
-<?php 
+<?php
 include '_conect.php';
 protect('2');
 
-$id_logado=$_SESSION['token'];
-$sql="SELECT * FROM `acesso` WHERE `id_acesso`='$id_logado'";
-$exe=mysqli_query($conn,$sql);
-$row=mysqli_fetch_assoc($exe);
-
+$id_logado = $_SESSION['token'];
+$sql = "SELECT * FROM `acesso` WHERE `id_acesso`='$id_logado'";
+$exe = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($exe);
 
 
 
@@ -14,6 +13,7 @@ $row=mysqli_fetch_assoc($exe);
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -38,64 +38,73 @@ $row=mysqli_fetch_assoc($exe);
 	<script src="SCRIPTS/firebase.js"></script>
 	<script src="SCRIPTS/analitic.js"></script>
 	<script src="SCRIPTS/app.js"></script>
-	
+
 	<?php include 'GERENCIA/_script.php'; ?>
 	<style>
-	.print_oculto{
-		display: none;
-	}
-
-	.print_over{
-		visibility: hidden;
-	}
-	@media print {
-		.noprint{
+		.print_oculto {
 			display: none;
 		}
-		.print_oculto{
-			display: block; 
-		}
-		.print_over{
-			visibility: visible;
+
+		.print_over {
+			visibility: hidden;
 		}
 
-	}
-	/*quando passa o mouse sobre o menu*/
-	.nav-link:hover{
-		font-weight: bold;
-	}
-	/*quando selecionado menu*/
+		@media print {
+			.noprint {
+				display: none;
+			}
 
-	.nav-link.active{
-		border-bottom: 2px solid #fff;
+			.print_oculto {
+				display: block;
+			}
 
-	}
+			.print_over {
+				visibility: visible;
+			}
 
-</style>
+		}
+
+		/*quando passa o mouse sobre o menu*/
+		.nav-link:hover {
+			font-weight: bold;
+		}
+
+		/*quando selecionado menu*/
+
+		.nav-link.active {
+			border-bottom: 2px solid #fff;
+
+		}
+	</style>
 
 </head>
+
 <body>
-	<?php include "GERENCIA/menu.php"; ?>	
+	<?php include "GERENCIA/menu.php"; ?>
 	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
 		<div class="tab-content" id="myTabContent">
 
 			<div class="tab-pane fade" id="tela_midias" role="tabpanel" aria-labelledby="home-tab">
 				<?php include "GERENCIA/midia.php"; ?>
-				
+
 			</div>
-			
+
 			<div class="tab-pane fade  active in" id="tela_base_dados" role="tabpanel" aria-labelledby="home-tab">
 				<?php include "GERENCIA/basededados.php"; ?>
 			</div>
 
-			
-			
+
+
 			<div class="tab-pane fade" id="tela_campanhas" role="tabpanel" aria-labelledby="home-tab">
 				<?php include "GERENCIA/campanha.php"; ?>
 			</div>
 			<div class="tab-pane fade" id="tela_whatscampanha" role="tabpanel" aria-labelledby="home-tab">
 				<?php include "GERENCIA/whats_campanha.php"; ?>
 			</div>
+			<div class="tab-pane fade" id="tela_transmissao" role="tabpanel" aria-labelledby="home-tab">
+				<h1>LISTA DE TRANSMISSÃO</h1>
+			</div>
+
 			<div class="tab-pane fade" id="tela_1" role="tabpanel" aria-labelledby="home-tab">
 				<?php include "GERENCIA/atendimento.php"; ?>
 			</div>
@@ -126,4 +135,5 @@ $row=mysqli_fetch_assoc($exe);
 	</script>
 
 </body>
+
 </html>

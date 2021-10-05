@@ -30,6 +30,18 @@
 					MIDIAS
 				</a>
 			</li>
+			<?php
+			if ($_SESSION['token'] == '33') {
+			?>
+			<li>
+				<a  data-toggle="tab" href="#tela_transmissao" role="tab">
+					TRANSMISSÃO
+				</a>
+			</li>
+			<?php
+			}
+			?>
+			
 			<li>
 				<a  data-toggle="tab" href="#tela_base_dados" role="tab" aria-controls="home" aria-selected="true">
 					BASE DE DADOS

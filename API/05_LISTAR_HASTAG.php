@@ -4,6 +4,8 @@
 $sql="SELECT 
 *,
 (SELECT COUNT(*) from `hast_cadastro` WHERE REF_HASTAG=H.idhastag) as qdecad
+
+
 FROM hastag as H ORDER BY nomehastag";
 
 $e=mysqli_query($conn,$sql);
