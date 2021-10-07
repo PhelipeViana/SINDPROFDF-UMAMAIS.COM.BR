@@ -299,7 +299,7 @@ $row = mysqli_fetch_assoc($exe);
                     $("#response_" + response.id).append(btn)
                 }
 
-               // console.log(response)
+                console.log(response)
             })
         }
 
@@ -350,16 +350,17 @@ $row = mysqli_fetch_assoc($exe);
                     ID_TAGAS_NOME.push(nome)
 
                 } else {
-                    let arr = ID_DADOS.indexOf(id)
-                    ID_TAGAS.splice(arr, 2);
+                    let arr = ID_TAGAS.indexOf(id)
+                    ID_TAGAS.splice(arr, 1);
 
-                    let arr_nome = ID_DADOS.indexOf(nome)
-                    ID_TAGAS_NOME.splice(arr_nome, 2);
-
+                    let arr_nome = ID_TAGAS_NOME.indexOf(nome)
+                    ID_TAGAS_NOME.splice(arr_nome, 1);
 
 
                 }
 
+                console.log(ID_TAGAS)
+                console.log(ID_TAGAS_NOME)
 
             })
 

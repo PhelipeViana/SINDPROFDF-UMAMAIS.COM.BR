@@ -102,7 +102,7 @@ $row = mysqli_fetch_assoc($exe);
 				<?php include "GERENCIA/whats_campanha.php"; ?>
 			</div>
 			<div class="tab-pane fade" id="tela_transmissao" role="tabpanel" aria-labelledby="home-tab">
-				<h1>LISTA DE TRANSMISSÃO</h1>
+			<?php include "GERENCIA/transmissao.php"; ?>
 			</div>
 
 			<div class="tab-pane fade" id="tela_1" role="tabpanel" aria-labelledby="home-tab">
