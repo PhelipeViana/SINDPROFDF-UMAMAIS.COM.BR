@@ -8,20 +8,24 @@
 		<button class="btn btn-success btn-block" id="btn_gerenciar_hastag">
 			GERENCIAR MINHAS <i class="fa fa-hashtag" aria-hidden="true"></i>HASTAG
 		</button>
+		<br>
+		<a href="TAGEAMENTO.php" target="_blank">
+			<button class="btn btn-danger btn-block">TAGEAMENTO AUTOMÁTICO</button>
+		</a>
 		<hr>
 		<hr>
 		<div>
 			<div class="row">
-				<div class="col-md-4">
+				<div class="col-md-8">
 					<label for="">Pesquisa</label>
 					<div class="row">
 						<input type="text" class="form-control" placeholder="Nome ou numero" id="input_pesquisa" style="height: 34px !important;">
 					</div>
 				</div>
-				<div class="col-md-4">
+				<!-- <div class="col-md-4">
 					<label for="">Grupo unitário</label>
 					<select name="grupo" id="select_group" class="form-control"></select>
-				</div>
+				</div> -->
 				<div class="col-md-2">
 
 					<label for="">Limite</label>
@@ -40,7 +44,15 @@
 			<thead>
 				<tr>
 
-					<th scope="col">#</th>
+					<th scope="col">
+						<!-- <button class="btn btn-danger btn-block" id='tag_geral'># GERAL</button>
+						<div class="text-center">
+							<p>
+								Todos
+								<input type="checkbox" class="form-control" id='check_all'>
+							</p>
+						</div> -->
+					</th>
 					<th scope="col">Nome</th>
 					<th scope="col">Contato</th>
 					<th scope="col">Canal</th>
@@ -160,9 +172,119 @@
 	</div>
 </div>
 
+<div class="modal fade" id="modal_lista_massa" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">TAGEAR GERAL</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="text-center" id='qtde_select'></div>
+				<table class="table table-stripe">
+					<tbody id="corpo_tag_todos"></tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">FECHAR</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
 <script>
 	READ.contatos();
-	READ.tags_geral()
+	READ.tags_geral();
+
+
+	let ID_DADOS = [];
+	$("#check_all").on('click', function(e) {
+		ID_DADOS = [];
+		if ($("#check_all").prop("checked")) {
+
+			$(".escolha_linha")
+				.prop("checked", true)
+				.each(function(e) {
+					let id = $(this).data('id');
+					ID_DADOS.push(id)
+				})
+
+
+		} else {
+			$(".escolha_linha").prop("checked", false);
+			ID_DADOS = [];
+		}
+	})
+
+	$("#tag_geral").on('click', function(e) {
+		if (ID_DADOS == '') {
+			alert('Ops!\nSelecione algum usúario!');
+		} else {
+			let num_select = ID_DADOS.length
+			$("#modal_lista_massa").modal('show')
+			READ.tags_em_massa();
+			$("#qtde_select").html('<h3>' + num_select + ' USÚARIO(S)</h3>')
+
+		}
+
+	})
+
+	function ret_tags_em_massa(response) {
+		let indice = response.ret;
+		let corpo = "";
+
+		for (let i = 0; i < indice.length; i++) {
+			corpo += `
+			<tr>
+			<td>${indice[i].nomehastag}</td>
+			<td>
+			<button class="btn btn-primary btn-block tag_geral" 
+			data-tag='${indice[i].idhastag}' 
+			id='btn_tag_geral${indice[i].idhastag}'>TAGEAR TODOS</button>
+			</td>
+			</tr>
+			`
+		}
+		$("#corpo_tag_todos").html(corpo)
+		$(".tag_geral").on('click', function(e) {
+			let tag = $(this).data('tag');
+			$("#btn_tag_geral" + tag)
+				.attr('disabled', true)
+				.removeClass('btn-primary')
+				.addClass('btn-secondary')
+				.html('...aguarde')
+			UPDATE.tag_massa(tag)
+
+			console.log(DADOS.CLASSE_CHECK_DATA('29', 'id', 'escolha_linha', tag))
+
+		})
+	}
+
+	function ret_btn_tag_mass(response) {
+		console.log(response)
+		let btn = $("#btn_tag_geral" + response.tag);
+		let status = response.st;
+		if (status == '1') {
+			btn
+				.removeClass('btn-secondary')
+				.addClass('btn-success')
+				.html('Sucesso: ' + response.num_tageados)
+		} else {
+
+			btn
+				.removeClass('btn-secondary')
+				.addClass('btn-danger')
+				.html('TODOS JÁ TAGEADOS')
+		}
+	}
 
 	function ret_tags_geral(response) {
 		let corpo = "";
@@ -181,7 +303,8 @@
 		let valor_grupo = $("#select_group").val()
 		let valor_grupo_text = $("#select_group option:selected").text();
 		let corpo_ret = "";
-
+		$("#check_all").prop("checked", false)
+		ID_DADOS = [];
 
 		corpo_ret = `<h1>${valor+' ('+valor_grupo_text+') '}</h1> <button class='btn btn-link' id='limpa_pesquisa'>Limpar pesquisa</button> `;
 		READ.contatos(0, valor, valor_grupo);
@@ -193,6 +316,8 @@
 			$("#retorno_das_pesquisas").html('') //LIMPA O RESULTADO DA PESQUISA
 			$("#input_pesquisa").val('');
 			$("#select_group").val(-1)
+			$("#check_all").prop("checked", false);
+			ID_DADOS = [];
 
 		})
 
@@ -201,11 +326,6 @@
 	function readcontatos(response) {
 		let indice = response.ret;
 		let corpo = "";
-		corpo = `
-		<tr colspan='3'>CARREGANDO...</tr> 
-
-		`
-
 		if (indice !== null) {
 			corpo = "";
 			for (let i = 0; i < indice.length; i++) {
@@ -213,6 +333,8 @@
 				<tr>
 				<td>
 				${[i+1]}
+		
+				
 				</td>
 
 				<td>
@@ -261,7 +383,9 @@
 			}
 		} else {
 			corpo += `
-			<tr colspan='3'>NÃO HÁ REGISTRO(S)</tr> 
+			<tr>
+			<td  colspan='5' class='text-center'><h1>NÃO HÁ REGISTRO(S)</h1></td>
+			</tr> 
 
 			`
 
@@ -282,6 +406,22 @@
 		<option value='${response.num}'>TODOS</option>
 		`
 
+		$(".escolha_linha").on('click', function(e) {
+			let id = $(this).data('id')
+			$("#check_all").prop("checked", false)
+
+			if ($(this).prop("checked")) {
+				ID_DADOS.push(id)
+
+			} else {
+
+				let arr = ID_DADOS.indexOf(id)
+				ID_DADOS.splice(arr, 1);
+
+			}
+
+
+		})
 		$("#select_limit")
 			.html(corpo_select)
 			.on('change', function(e) {

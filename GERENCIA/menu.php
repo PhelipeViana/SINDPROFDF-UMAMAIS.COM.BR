@@ -5,7 +5,7 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span></button>
-				<a class="navbar-brand" href="#"><span>SINDPROF</span> 1.0</a>
+				<a class="navbar-brand" href="#"><span>SINDPROF</span> 2.0</a>
 			</div>
 		</div><!-- /.container-fluid -->
 	</nav>
@@ -25,7 +25,7 @@
 		</div>
 		<div class="divider"></div>
 		<ul class="nav menu"  role="tablist">
-			<li  class="active">
+			<li   class="active">
 				<a  data-toggle="tab" href="#tela_midias" role="tab" aria-controls="home" aria-selected="true">
 					MIDIAS
 				</a>

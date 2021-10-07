@@ -1,15 +1,26 @@
-<?php 
+<?php
 //GERENCIA
-$validador_usuario=$_SESSION['token']; //INSERIR O NOME DA SESSAO DO LOGADO
+$validador_usuario = $_SESSION['token']; //INSERIR O NOME DA SESSAO DO LOGADO
 
 
-?>	
+?>
 
 
 
 
 <script>
 	const READ = {
+		tags_em_massa: function() {
+			$.ajax({
+					url: '<?= $ENDPOINT; ?>',
+					type: 'POST',
+					dataType: 'json',
+					data: DADOS.PARS('28'),
+				})
+				.done(function(response) {
+					ret_tags_em_massa(response)
+				})
+		},
 		tags_geral: function() {
 			$.ajax({
 					url: '<?= $ENDPOINT; ?>',
@@ -21,350 +32,378 @@ $validador_usuario=$_SESSION['token']; //INSERIR O NOME DA SESSAO DO LOGADO
 					ret_tags_geral(response)
 				})
 		},
-		select_arquivos: function(midia=0){ 
+		select_arquivos: function(midia = 0) {
 			$.ajax({
-				url: '<?=$ENDPOINT?>',
-				type: 'POST',
-				dataType: 'JSON',
-				data: DADOS.PARS('20'),
-			})
-			.done(function(response) {
-				
-				list_arquivos(response,midia)
+					url: '<?= $ENDPOINT ?>',
+					type: 'POST',
+					dataType: 'JSON',
+					data: DADOS.PARS('20'),
+				})
+				.done(function(response) {
 
-			})
-		},
-		todos_arquivos: function(){ 
-			$.ajax({
-				url: '<?=$ENDPOINT?>',
-				type: 'POST',
-				dataType: 'JSON',
-				data: DADOS.PARS('20'),
-			})
-			.done(function(response) {
-				rettodos_arquivos(response)
+					list_arquivos(response, midia)
 
-			})
+				})
 		},
-		list_campanha:function(){
+		todos_arquivos: function() {
 			$.ajax({
-				url: '<?=$ENDPOINT;?>',
-				type: 'POST',
-				dataType: 'json',
-				data: DADOS.PARS('18'),
-			})
-			.done(function(response) {
-				
-				retlist_campanha(response);
+					url: '<?= $ENDPOINT ?>',
+					type: 'POST',
+					dataType: 'JSON',
+					data: DADOS.PARS('20'),
+				})
+				.done(function(response) {
+					rettodos_arquivos(response)
 
-			})	
+				})
 		},
-		perfil_cliente_campanha:function(){
+		list_campanha: function() {
 			$.ajax({
-				url: '<?=$ENDPOINT;?>',
-				type: 'POST',
-				dataType: 'json',
-				data: DADOS.CLASSE_CHECK('17','tagescolha'),
-			})
-			.done(function(response) {
-				encaminhar_campanha(response)
+					url: '<?= $ENDPOINT; ?>',
+					type: 'POST',
+					dataType: 'json',
+					data: DADOS.PARS('18'),
+				})
+				.done(function(response) {
+
+					retlist_campanha(response);
+
+				})
+		},
+		perfil_cliente_campanha: function() {
+			$.ajax({
+					url: '<?= $ENDPOINT; ?>',
+					type: 'POST',
+					dataType: 'json',
+					data: DADOS.CLASSE_CHECK('17', 'tagescolha'),
+				})
+				.done(function(response) {
+					encaminhar_campanha(response)
 
 
-			})	
+				})
 		},
-		perfil_cliente_campanha2:function(id_grupo,text_grupo){
+		perfil_cliente_campanha2: function(id_grupo, text_grupo) {
 			$.ajax({
-				url: '<?=$ENDPOINT;?>',
-				type: 'POST',
-				dataType: 'json',
-				data: DADOS.CLASSE_CHECK('24','tagescolha',id_grupo,text_grupo),
-			})
-			.done(function(response) {
-				nova_camapanha(response)
+					url: '<?= $ENDPOINT; ?>',
+					type: 'POST',
+					dataType: 'json',
+					data: DADOS.CLASSE_CHECK('24', 'tagescolha', id_grupo, text_grupo),
+				})
+				.done(function(response) {
+					nova_camapanha(response)
 
-			})	
+				})
 		},
-		whats_campanha:function(){
+		whats_campanha: function() {
 			$.ajax({
-				url: '<?=$ENDPOINT;?>',
-				type: 'POST',
-				dataType: 'json',
-				data: DADOS.PARS('16'),
-			})
-			.done(function(response) {
-				readwhats_campanha(response)
+					url: '<?= $ENDPOINT; ?>',
+					type: 'POST',
+					dataType: 'json',
+					data: DADOS.PARS('16'),
+				})
+				.done(function(response) {
+					readwhats_campanha(response)
 
-			})	
+				})
 		},
-		hast_cliente:function(id){
+		hast_cliente: function(id) {
 			$.ajax({
-				url: '<?=$ENDPOINT;?>',
-				type: 'POST',
-				dataType: 'json',
-				data: DADOS.PARS('13',id),
-			})
-			.done(function(response) {
-				readhast_cliente(response)
+					url: '<?= $ENDPOINT; ?>',
+					type: 'POST',
+					dataType: 'json',
+					data: DADOS.PARS('13', id),
+				})
+				.done(function(response) {
+					readhast_cliente(response)
 
-			})	
+				})
 		},
-		contatos:function(pagina=100,pesquisa=0,grupo=-1){
+		contatos: function(pagina = 100, pesquisa = 0, grupo = -1) {
 			$.ajax({
-				url: '<?=$ENDPOINT;?>',
-				type: 'POST',
-				dataType: 'json',
-				data: DADOS.PARS('15',pagina,pesquisa,grupo),
-			})
-			.done(function(response) {
-				readcontatos(response)
-				
-			})	
+					url: '<?= $ENDPOINT; ?>',
+					type: 'POST',
+					dataType: 'json',
+					data: DADOS.PARS('15', pagina, pesquisa, grupo),
+				})
+				.done(function(response) {
+					readcontatos(response)
+
+				})
 		},
-		atendentes:function(){
+		atendentes: function() {
 			$.ajax({
-				url: '<?=$ENDPOINT?>',
-				type: 'POST',
-				dataType: 'json',
-				data: DADOS.PARS('2'),
-			})
-			.done(function(response) {
-				atendentes(response)
-			})
-			
+					url: '<?= $ENDPOINT ?>',
+					type: 'POST',
+					dataType: 'json',
+					data: DADOS.PARS('2'),
+				})
+				.done(function(response) {
+					atendentes(response)
+				})
+
 		},
-		hastags:function(){
+		hastags: function() {
 			$.ajax({
-				url: '<?=$ENDPOINT?>',
-				type: 'POST',
-				dataType: 'json',
-				data: DADOS.PARS('5'),
-			})
-			.done(function(response) {
-				retmontarhastags(response)
-			})
-			
+					url: '<?= $ENDPOINT ?>',
+					type: 'POST',
+					dataType: 'json',
+					data: DADOS.PARS('5'),
+				})
+				.done(function(response) {
+					retmontarhastags(response)
+				})
+
 		},
-		hastagsenvio:function(){
+		hastagsenvio: function() {
 			$.ajax({
-				url: '<?=$ENDPOINT?>',
-				type: 'POST',
-				dataType: 'json',
-				data: DADOS.PARS('5'),
-			})
-			.done(function(response) {
-				retmontarhastagsescolha(response)
-			})
-			
+					url: '<?= $ENDPOINT ?>',
+					type: 'POST',
+					dataType: 'json',
+					data: DADOS.PARS('5'),
+				})
+				.done(function(response) {
+					retmontarhastagsescolha(response)
+				})
+
 		}
 
-		
+
 	}
 	const CREATE = {
-		novoatendente:function(form){
+		novoatendente: function(form) {
 			$.ajax({
-				url: '<?=$ENDPOINT?>',
-				type: 'POST',
-				dataType: 'json',
-				data: DADOS.FORM('4',form),
-			})
-			.done(function(response) {
-				retnovoatendente(response)
-			})
-			
+					url: '<?= $ENDPOINT ?>',
+					type: 'POST',
+					dataType: 'json',
+					data: DADOS.FORM('4', form),
+				})
+				.done(function(response) {
+					retnovoatendente(response)
+				})
+
 		},
-		hastags:function(id=0,acao=0,nome='0'){
+		hastags: function(id = 0, acao = 0, nome = '0') {
 			$.ajax({
-				url: '<?=$ENDPOINT?>',
-				type: 'POST',
-				dataType: 'json',
-				data: DADOS.PARS('6',id,acao,nome),
-			})
-			.done(function(response) {
-				retacaohastags(response)
-			})
-			
+					url: '<?= $ENDPOINT ?>',
+					type: 'POST',
+					dataType: 'json',
+					data: DADOS.PARS('6', id, acao, nome),
+				})
+				.done(function(response) {
+					retacaohastags(response)
+				})
+
 		}
 	}
 	const UPDATE = {
-		msg_campanha: function(form){ 
+		tag_massa: function(idtag) {
 			$.ajax({
-				url: '<?=$ENDPOINT?>',
-				type: 'POST',
-				dataType: 'JSON',
-				data: DADOS.FORM('23',form),
-			})
-			.done(function(response) {
-				retgravadomsg(response)
-			})
+					url: '<?= $ENDPOINT ?>',
+					type: 'POST',
+					dataType: 'JSON',
+					data: DADOS.CLASSE_CHECK_DATA('29', 'id', 'escolha_linha', idtag),
+				})
+				.done(function(response) {
+					ret_btn_tag_mass(response)
+				})
 		},
-		bloquearrquivo: function(id){ 
+		msg_campanha: function(form) {
 			$.ajax({
-				url: '<?=$ENDPOINT?>',
-				type: 'POST',
-				dataType: 'JSON',
-				data: DADOS.PARS('21',id),
-			})
-			.done(function(response) {
-				READ.todos_arquivos()//atualiza a pagina de arquivos
-			})
+					url: '<?= $ENDPOINT ?>',
+					type: 'POST',
+					dataType: 'JSON',
+					data: DADOS.FORM('23', form),
+				})
+				.done(function(response) {
+					retgravadomsg(response)
+				})
 		},
-		desbloqueiaarrquivo: function(id){ 
+		bloquearrquivo: function(id) {
 			$.ajax({
-				url: '<?=$ENDPOINT?>',
-				type: 'POST',
-				dataType: 'JSON',
-				data: DADOS.PARS('22',id),
-			})
-			.done(function(response) {
-				READ.todos_arquivos()//atualiza a pagina de arquivos
-			})
+					url: '<?= $ENDPOINT ?>',
+					type: 'POST',
+					dataType: 'JSON',
+					data: DADOS.PARS('21', id),
+				})
+				.done(function(response) {
+					READ.todos_arquivos() //atualiza a pagina de arquivos
+				})
 		},
-		nomearquivo: function(form){ 
+		desbloqueiaarrquivo: function(id) {
 			$.ajax({
-				url: '<?=$ENDPOINT?>',
-				type: 'POST',
-				dataType: 'JSON',
-				data: DADOS.FORM('19',form),
-			})
-			.done(function(response) {
-				retnomearquivo(response)
-			})
+					url: '<?= $ENDPOINT ?>',
+					type: 'POST',
+					dataType: 'JSON',
+					data: DADOS.PARS('22', id),
+				})
+				.done(function(response) {
+					READ.todos_arquivos() //atualiza a pagina de arquivos
+				})
 		},
-		atualiza_hatgs:function(acao,idgroup,iduser){
+		nomearquivo: function(form) {
 			$.ajax({
-				url: '<?=$ENDPOINT;?>',
-				type: 'POST',
-				dataType: 'json',
-				data: DADOS.PARS('14',acao,idgroup,iduser),
-			})
-			.done(function(response) {
-				
-				READ.hast_cliente(response.id)     
-				
-			})	
+					url: '<?= $ENDPOINT ?>',
+					type: 'POST',
+					dataType: 'JSON',
+					data: DADOS.FORM('19', form),
+				})
+				.done(function(response) {
+					retnomearquivo(response)
+				})
 		},
-		atendente:function(id,acao,nome=0,email=0){
+		atualiza_hatgs: function(acao, idgroup, iduser) {
 			$.ajax({
-				url: '<?=$ENDPOINT?>',
-				type: 'POST',
-				dataType: 'json',
-				data: DADOS.PARS('3',id,acao,nome,email),
-			})
-			.done(function(response) {
-				retedicaoatendentes(response)
-			})
-			
+					url: '<?= $ENDPOINT; ?>',
+					type: 'POST',
+					dataType: 'json',
+					data: DADOS.PARS('14', acao, idgroup, iduser),
+				})
+				.done(function(response) {
+
+					READ.hast_cliente(response.id)
+
+				})
 		},
-		cadastramento:function(form){
+		atendente: function(id, acao, nome = 0, email = 0) {
 			$.ajax({
-				url: '<?=$ENDPOINT;?>',
-				type: 'POST',
-				dataType: 'json',
-				data: DADOS.FORM('11',form),
-			})
-			.done(function(response) {
-				updatecadastramento(response)
-				
-			})	
+					url: '<?= $ENDPOINT ?>',
+					type: 'POST',
+					dataType: 'json',
+					data: DADOS.PARS('3', id, acao, nome, email),
+				})
+				.done(function(response) {
+					retedicaoatendentes(response)
+				})
+
+		},
+		cadastramento: function(form) {
+			$.ajax({
+					url: '<?= $ENDPOINT; ?>',
+					type: 'POST',
+					dataType: 'json',
+					data: DADOS.FORM('11', form),
+				})
+				.done(function(response) {
+					updatecadastramento(response)
+
+				})
 		}
 
 
 	}
 	const DELETE = {}
 
-	
-	const DADOS={
-		PARS:function(auth,p1=0,p2=0,p3=0,p4=0,p5=0){
-			let obj={
-				auth:auth,
-				TOKEN_USER:"<?=$validador_usuario?>",
-				p1:p1,
-				p2:p2,
-				p3:p3,
-				p4:p4,
-				p5:p5
+
+	const DADOS = {
+		PARS: function(auth, p1 = 0, p2 = 0, p3 = 0, p4 = 0, p5 = 0) {
+			let obj = {
+				auth: auth,
+				TOKEN_USER: "<?= $validador_usuario ?>",
+				p1: p1,
+				p2: p2,
+				p3: p3,
+				p4: p4,
+				p5: p5
 			}
 			return obj;
 		},
-		OBJ:function(auth,obj){
-			obj['TOKEN_USER']="<?=$validador_usuario?>";
-			obj['auth']=auth;
+		OBJ: function(auth, obj) {
+			obj['TOKEN_USER'] = "<?= $validador_usuario ?>";
+			obj['auth'] = auth;
 
-			
+
 			return obj;
 		},
-		CLASSE_CHECK:function(auth,cl,p1=0,p2=0){
-			let classe=document.getElementsByClassName(cl);
-			let json={};
-			let obj=[];
-			for(let i=0;i<classe.length;i++){
-				if(classe[i].checked){
+		CLASSE_CHECK: function(auth, cl, p1 = 0, p2 = 0) {
+			let classe = document.getElementsByClassName(cl);
+			let json = {};
+			let obj = [];
+			for (let i = 0; i < classe.length; i++) {
+				if (classe[i].checked) {
 					obj.push(classe[i].value);
 				}
 			}
-			json['TOKEN_USER']="<?=$validador_usuario?>";
-			json['JSON']=obj;
-			json['auth']=auth;
-			json['p1']=p1;
-			json['p2']=p2;
-			
-			
+			json['TOKEN_USER'] = "<?= $validador_usuario ?>";
+			json['JSON'] = obj;
+			json['auth'] = auth;
+			json['p1'] = p1;
+			json['p2'] = p2;
+
+
 			return json;
 		},
-		CLASSE:function(auth,cl){
-			let classe=document.getElementsByClassName(cl);
-			let json={};
-			for(let i=0;i<classe.length;i++){
-				json[classe[i].getAttribute("name")]=classe[i].value;
+		CLASSE_CHECK_DATA: function(auth, data, cl, p1 = 0, p2 = 0) {
+			let classe = document.getElementsByClassName(cl);
+			let json = {};
+			let obj = [];
+			for (let i = 0; i < classe.length; i++) {
+				if (classe[i].checked) {
+					obj.push(classe[i].getAttribute('data-' + data));
+				}
 			}
-			json['TOKEN_USER']="<?=$validador_usuario?>";
-			json['auth']=auth;
-			
+			json['auth'] = auth;
+			json['JSON'] = obj;
+			json['p1'] = p1;
+			json['p2'] = p2;
+
+
 			return json;
 		},
-		CLASSE_JSON:function(auth,cl,p1=0,p2=0){
-			let classe=document.getElementsByClassName(cl);
-			let json={};
-			let obj=[];
-			for(let i=0;i<classe.length;i++){
+		CLASSE: function(auth, cl) {
+			let classe = document.getElementsByClassName(cl);
+			let json = {};
+			for (let i = 0; i < classe.length; i++) {
+				json[classe[i].getAttribute("name")] = classe[i].value;
+			}
+			json['TOKEN_USER'] = "<?= $validador_usuario ?>";
+			json['auth'] = auth;
+
+			return json;
+		},
+		CLASSE_JSON: function(auth, cl, p1 = 0, p2 = 0) {
+			let classe = document.getElementsByClassName(cl);
+			let json = {};
+			let obj = [];
+			for (let i = 0; i < classe.length; i++) {
 				obj.push(classe[i].value);
 			}
-			json['TOKEN_USER']="<?=$validador_usuario?>";
-			json['auth']=auth;
-			json['JSON']=obj;
-			json['p1']=p1;
-			json['p2']=p2;
+			json['TOKEN_USER'] = "<?= $validador_usuario ?>";
+			json['auth'] = auth;
+			json['JSON'] = obj;
+			json['p1'] = p1;
+			json['p2'] = p2;
 
 
-			
+
 			return json;
 		},
-		FORM:function(auth,formulario,p1=0){
-			let int=$("#"+formulario).serialize();
-			let usuario="<?=$validador_usuario?>";
-			int+="&auth="+auth+"&TOKEN_USER="+usuario+"&p1="+p1;
+		FORM: function(auth, formulario, p1 = 0) {
+			let int = $("#" + formulario).serialize();
+			let usuario = "<?= $validador_usuario ?>";
+			int += "&auth=" + auth + "&TOKEN_USER=" + usuario + "&p1=" + p1;
 			return int
 		},
-		FORM_ARRAY:function(auth,formulario,cl){
-			let form=$("#"+formulario).serializeArray();
-			let json={};
-			let array=[];
-			for(let i=0;i<form.length;i++){
-				json[form[i].name]=form[i].value
+		FORM_ARRAY: function(auth, formulario, cl) {
+			let form = $("#" + formulario).serializeArray();
+			let json = {};
+			let array = [];
+			for (let i = 0; i < form.length; i++) {
+				json[form[i].name] = form[i].value
 
 			}
 			//POVOA O ARRAY MEDIANTE A CLASSE
-			let classe=document.getElementsByClassName(cl);
-			for(let i=0;i<classe.length;i++){
+			let classe = document.getElementsByClassName(cl);
+			for (let i = 0; i < classe.length; i++) {
 				array.push(classe[i].value);
 			}
-			
-			json['auth']=auth;
-			json['TOKEN_USER']="<?=$validador_usuario?>";
-			json['ARRAY']=array;
+
+			json['auth'] = auth;
+			json['TOKEN_USER'] = "<?= $validador_usuario ?>";
+			json['ARRAY'] = array;
 
 
-			
+
 
 			return json;
 
@@ -373,7 +412,7 @@ $validador_usuario=$_SESSION['token']; //INSERIR O NOME DA SESSAO DO LOGADO
 	}
 	jQuery(document).ready(function($) {
 		initializeMasks();
-		
+
 	});
 
 	function initializeMasks() {
@@ -389,8 +428,10 @@ $validador_usuario=$_SESSION['token']; //INSERIR O NOME DA SESSAO DO LOGADO
 		$(".mask-numhab").mask("99999999999");
 		$(".mask-placa").mask("999-999");
 		$(".mask-dinheiro")
-		.mask("######.##",{reverse: true})
-		.attr('maxlength','9');
+			.mask("######.##", {
+				reverse: true
+			})
+			.attr('maxlength', '9');
 
 
 
@@ -398,38 +439,39 @@ $validador_usuario=$_SESSION['token']; //INSERIR O NOME DA SESSAO DO LOGADO
 	}
 
 
-	function limparFormulario(form){
-		$('#'+form).each (function(){
+	function limparFormulario(form) {
+		$('#' + form).each(function() {
 			this.reset();
 		});
 	}
-	
 
-//	console.log(CPF.generate())
 
-function CallDocRun(){
-	firebase.database().ref("DOCUMENTOS").child('ATUAL').set({time:time()});
+	//	console.log(CPF.generate())
 
-}
-function relogio(){
-	var tempo=new Date();
-	var hora=tempo.getHours();
-	var min=tempo.getMinutes();
-	var seg=tempo.getSeconds();
-	if(min<10){
+	function CallDocRun() {
+		firebase.database().ref("DOCUMENTOS").child('ATUAL').set({
+			time: time()
+		});
 
-		var min="0"+min;
-	}
-	if(seg<10){
-
-		var seg="0"+seg;
 	}
 
-	let horario=hora+":"+min+":"+seg;
+	function relogio() {
+		var tempo = new Date();
+		var hora = tempo.getHours();
+		var min = tempo.getMinutes();
+		var seg = tempo.getSeconds();
+		if (min < 10) {
 
-	setTimeout("relogio()","1000");
-	return horario; 
-}
+			var min = "0" + min;
+		}
+		if (seg < 10) {
 
+			var seg = "0" + seg;
+		}
 
+		let horario = hora + ":" + min + ":" + seg;
+
+		setTimeout("relogio()", "1000");
+		return horario;
+	}
 </script>
