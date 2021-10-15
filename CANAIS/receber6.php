@@ -34,6 +34,53 @@ if (!empty($decoded["text"]["message"])) {
 	/*FIM CAMPANHA DE HASTAG*/
 
 }
+/*SAIDA AUTOMATICA*/
+$array = explode(" ", $mensagem);
+if (in_array("0", $array)) {
+	naoReceberMensagem($phone);
+}
+// POR VALOR EXATO
+
+$MSG_COMPARE = strtoupper(SemAcentos($mensagem));
+
+
+if ($MSG_COMPARE == 'NAO RECEBER') {
+	naoReceberMensagem($phone);
+}
+if ($MSG_COMPARE == 'NAO SOU EU') {
+	naoReceberMensagem($phone);
+}
+if ($MSG_COMPARE == 'EXCLUI MEU NUMERO') {
+	naoReceberMensagem($phone);
+}
+
+if ($MSG_COMPARE == 'EXCLUI ESSE NUMERO') {
+	naoReceberMensagem($phone);
+}
+
+if ($MSG_COMPARE == 'NAO DESEJO RECEBER MENSAGEM') {
+	naoReceberMensagem($phone);
+}
+
+
+function naoReceberMensagem($phone)
+{
+	global $conn;
+	$sql = "UPDATE `carregamento_contato` SET `ativo`=2 WHERE `phone_carregamento`='$phone'";
+	$exe = mysqli_query($conn, $sql);
+}
+function FormatUpper($string)
+{
+	$a = str_replace(",", " ", $string);
+	$b = str_replace("-", " ", $a);
+	$c = str_replace("_", " ", $b);
+	$d = str_replace(".", " ", $c);
+
+
+
+	return strtoupper(preg_replace(array("/(á|à|ã|â|ä)/", "/(Á|À|Ã|Â|Ä)/", "/(é|è|ê|ë)/", "/(É|È|Ê|Ë)/", "/(í|ì|î|ï)/", "/(Í|Ì|Î|Ï)/", "/(ó|ò|õ|ô|ö)/", "/(Ó|Ò|Õ|Ô|Ö)/", "/(ú|ù|û|ü)/", "/(Ú|Ù|Û|Ü)/", "/(ñ)/", "/(Ñ)/", "/(ç|Ç)/"), explode(" ", "a A e E i I o O u U n N C c"), $d));
+}
+
 
 if (!empty($decoded["audio"]["audioUrl"])) {
 	$mensagem=$decoded["audio"]["audioUrl"];
