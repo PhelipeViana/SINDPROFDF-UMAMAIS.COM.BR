@@ -3,6 +3,8 @@ $ID = $_REQUEST['ID'];
 $TOKEN = $_REQUEST['TOKEN'];
 $NUMERO = $_REQUEST['NUMERO'];
 $MENSAGEM = $_REQUEST['MSG'];
+$MENSAGEM = urlencode($MENSAGEM);
+
 
 $curl = curl_init();
 

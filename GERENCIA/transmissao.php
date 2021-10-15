@@ -1,4 +1,4 @@
-<h1 class="jumbotron text-center">LISTA DE TRANSMISSÃO</h1>
+<h1 class="jumbotron text-center">LISTA DE TRANSMISSÃO 2</h1>
 <div class="row">
     <div class="col-md-10">
         <label for="">Canal da lista</label>
@@ -53,6 +53,7 @@
         if (txt > 0) {
             let cont = 0;
             let nums = $(".phones_enviar").length;
+
             let envio = setInterval(function() {
                 if (nums == cont) {
                     clearInterval(envio)
@@ -72,7 +73,7 @@
                 }
                 cont++;
 
-            }, 1000)
+            }, 4000)
 
 
 
@@ -95,7 +96,7 @@
             buscarLista(id, tk);
             $("#btn_busca_lista")
                 .attr('disabled', true)
-                .html('...buscando lista(s)')
+                .html('...buscando')
         })
     })
 

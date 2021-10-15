@@ -311,7 +311,7 @@ if (isset($limit) && !empty($limit)) {
 							clearInterval(envio);
 							alert('FINALIZOU')
 						}
-					}, 3000);
+					}, 10000);
 
 			} else {
 				$("#txt_mensagem").focus()

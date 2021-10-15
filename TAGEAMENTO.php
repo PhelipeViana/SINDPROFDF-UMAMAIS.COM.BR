@@ -394,6 +394,7 @@ $row = mysqli_fetch_assoc($exe);
         })
 
         function readcontatos(response) {
+            console.log(response)
             let indice = response.ret;
             let corpo = "";
             if (indice !== null) {
