@@ -22,6 +22,26 @@
 
 </div>
 <div id="area_listas" style="display: none;">
+<hr>
+<br>
+<label for="">Tipo de mensagem</label>
+    <select id="midia" class="form-control">
+        <option value="0">SOMENTE MENSAGEM</option>
+        <?php
+
+        $sql_arq = "SELECT * FROM `arquivos` order by idArquivo desc";
+        $e_arq = mysqli_query($conn, $sql_arq);
+
+        while ($row = mysqli_fetch_assoc($e_arq)) {
+        ?>
+            <option value="<?= $row['linkArquivo'] ?>"><?= $row['nomeArquivo'] ?></option>
+        <?php
+        }
+
+        ?>
+    </select>
+    <hr>
+
 
     <label class="text-center">TEXTO PARA ENVIAR</label>
     <textarea class='form-control' cols="30" rows="10" id="conteudo_lista"></textarea>
@@ -68,12 +88,13 @@
                     let num = classe.eq(cont).data('num');
                     let id = classe.eq(cont).data('id');
                     let tk = classe.eq(cont).data('tk');
+                    let midia = $("#midia").val()
                     $("#resp_" + num).html('ENVIADO COM SUCESSO!')
-                    enviandoMensagemLista(id, tk, num, msg);
+                    enviandoMensagemLista(id, tk, num, msg, midia);
                 }
                 cont++;
 
-            }, 4000)
+            }, 15000)
 
 
 
@@ -156,23 +177,25 @@
         }
     }
 
-    function enviandoMensagemLista(id, tk, num, msg) {
+    function enviandoMensagemLista(id, tk, num, msg, midia) {
+        let obj = {
+            ID: id,
+            TOKEN: tk,
+            NUMERO: num,
+            MSG: msg,
+            MIDIA: midia
+
+        }
         $.ajax({
                 url: 'GERENCIA/zapio/envio_listat.php',
                 type: 'POST',
                 dataType: 'json',
-                data: {
-                    ID: id,
-                    TOKEN: tk,
-                    NUMERO: num,
-                    MSG: msg
-
-                },
+                data:obj
             })
             .done(function(response) {
 
                 console.log(response)
             })
-
+    
     }
 </script>
