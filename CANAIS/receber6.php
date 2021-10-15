@@ -2,10 +2,10 @@
 include "../_conect.php";
 
 $json = file_get_contents('php://input');
-$CANAL_RECEBIMENTO=1;//ID DO CADASTRADO
+$CANAL_RECEBIMENTO=6;//ID DO CADASTRADO
 $decoded = json_decode($json,true);
 $phone=$decoded["phone"];
-$type=6;//CODIGO DE MENSAGEM RECEBIDA
+$type=1;//CODIGO DE MENSAGEM RECEBIDA
 $idmsg=$decoded["messageId"];
 $data_mensagem=date('Y-m-d H:i:s');
 $mensagem=noInjection($decoded["text"]["message"]);
