@@ -1,30 +1,9 @@
-<h1 class="jumbotron text-center">LISTA DE TRANSMISSÃO 2</h1>
-<div class="row">
-    <div class="col-md-10">
-        <label for="">Canal da lista</label>
-        <select name="" id="canal_lista" class="form-control">
-            <option value="0">SELECIONE O CANAL</option>
-            <?php
-            $sql_canais = "SELECT * FROM `canaiszapio`";
-            $exe_canais = mysqli_query($conn, $sql_canais);
-            while ($r = mysqli_fetch_assoc($exe_canais)) {
-            ?>
-                <option value="<?= $r['idcanalzapio']; ?>" data-tk="<?= $r['token_canalzapio']; ?>" data-id="<?= $r['id_canalzapio']; ?>"><?= $r['nome_canalzapio']; ?>
-                </option>
-            <?php
-            }
-            ?>
-        </select>
-    </div>
-    <div class="col-md-2">
-        <button class='btn btn-danger btn-block' style="margin-top:22px" disabled id='btn_busca_lista'>BUSCAR</button>
-    </div>
+<h1 class="jumbotron text-center">LISTA DE TRANSMISSÃO 3</h1>
 
-</div>
-<div id="area_listas" style="display: none;">
-<hr>
-<br>
-<label for="">Tipo de mensagem</label>
+<div id="area_listas">
+    <hr>
+    <br>
+    <label for="">Tipo de mensagem</label>
     <select id="midia" class="form-control">
         <option value="0">SOMENTE MENSAGEM</option>
         <?php
@@ -47,11 +26,43 @@
     <textarea class='form-control' cols="30" rows="10" id="conteudo_lista"></textarea>
 
     <br>
-    <button class='btn btn-primary btn-block' id='btn_enviar_msg_list'>Enviar</button>
+    <button class='btn btn-primary btn-block' id='btn_enviar_msg_list' disabled>Enviar</button>
     <br>
+    <!-- 
+    <div class="row">
+        <div class="col-md-10">
+            <label for="">Canal da lista</label>
+            <select name="" id="canal_lista" class="form-control">
+                <option value="0">SELECIONE O CANAL</option>
+                <?php
+                $sql_canais = "SELECT * FROM `canaiszapio`";
+                $exe_canais = mysqli_query($conn, $sql_canais);
+                while ($r = mysqli_fetch_assoc($exe_canais)) {
+                ?>
+                    <option value="<?= $r['idcanalzapio']; ?>" data-tk="<?= $r['token_canalzapio']; ?>" data-id="<?= $r['id_canalzapio']; ?>"><?= $r['nome_canalzapio']; ?>
+                    </option>
+                <?php
+                }
+                ?>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button class='btn btn-danger btn-block' style="margin-top:22px" disabled id='btn_busca_lista'>ATUALIZAR</button>
+        </div>
+
+    </div>
+     -->
     <h3>LISTA(S) DE TRANSMISSÃO</h3>
     <table class='table table-responsive table-bordered'>
         <thead>
+            <th>
+                <div class="text-center noprint">
+                    <p>
+                        Todos
+                        <input type="checkbox" class="form-control" id='check_all' checked>
+                    </p>
+                </div>
+            </th>
             <th>Nome da Lista</th>
             <th>Status Envio</th>
         </thead>
@@ -64,42 +75,152 @@
 
 
 <script>
+    READ.listas_tranmissao();
+    let ID_SELECIONADO = [];
+
+    $("#check_all").on('click', function(e) {
+        ID_SELECIONADO = [];
+        if ($("#check_all").prop("checked")) {
+
+            $(".escolha_linha")
+                .prop("checked", true)
+                .each(function(e) {
+                    let id = $(this).data('id');
+                    ID_SELECIONADO.push(id);
+                    $("#linha_" + id).css('color', 'blue')
+                })
+            console.log(ID_SELECIONADO)
+
+        } else {
+            $(".escolha_linha").prop("checked", false);
+            ID_SELECIONADO = [];
+            $(".linha").css('color', 'red')
+            console.log(ID_SELECIONADO)
+
+        }
+    })
+
+
+
+    function montarListaFixa(response) {
+
+
+        let corpo = "";
+        if (response != null) {
+            for (let i = 0; i < response.length; i++) {
+                corpo += `<tr id='linha_${response[i].phone_transmissao}' class='linha'>
+                <td>
+                ${[i+1]}
+                <input type='checkbox' class='form-control escolha_linha' 
+                data-id='${response[i].phone_transmissao}' checked>
+                </td>
+                <td>${response[i].nome_tranmissao}</td>
+                <td class='st_envios'
+                data-num='${response[i].phone_transmissao}'
+                data-id='${response[i].id_canal_transmissao}'
+                data-tk='${response[i].token_canalzapio}'
+                id='resp_${response[i].phone_transmissao}'>...</td>
+                </tr>`
+                ID_SELECIONADO.push(response[i].phone_transmissao)
+
+            }
+
+
+        } else {
+            corpo += `<tr>
+                <td colpan='4'>NENHUMA LISTA DE TRANSMISSÃO ATIVA</td>
+                </tr>
+               `
+        }
+        $("#corpo_lista_transmissao").html(corpo)
+        $(".linha").css('color', 'blue')
+
+
+        $(".escolha_linha").on('click', function(e) {
+
+            let id = $(this).data('id')
+            $("#check_all").prop("checked", false)
+
+            if ($(this).prop("checked")) {
+                ID_SELECIONADO.push(id);
+                $("#linha_" + id).css('color', 'blue')
+            } else {
+                let arr = ID_SELECIONADO.indexOf(id)
+                ID_SELECIONADO.splice(arr, 1);
+                $("#linha_" + id).css('color', 'red')
+            }
+            console.log(ID_SELECIONADO)
+
+        })
+    }
+
+
+
+    $("#conteudo_lista").keyup(function(e) {
+        let txt = $(this).val();
+        if (txt.length > 0) {
+            $("#btn_enviar_msg_list").attr('disabled', false)
+
+        } else {
+            $("#btn_enviar_msg_list").attr('disabled', true)
+        }
+        console.log()
+    })
+
+
+
     $("#btn_enviar_msg_list").on('click', function(e) {
         $("#btn_enviar_msg_list")
             .attr('disabled', true)
             .html('...enviando')
+        $(".st_envios").html('...'); //altera o status quando faz outro envio
+
         let txt = $("#conteudo_lista").length;
         let msg = $("#conteudo_lista").val()
-        if (txt > 0) {
+        let num_selecionado = ID_SELECIONADO.length;
+        if (msg.length > 0) {
             let cont = 0;
-            let nums = $(".phones_enviar").length;
+            let nums = ID_SELECIONADO.length;
 
             let envio = setInterval(function() {
+
                 if (nums == cont) {
                     clearInterval(envio)
                     alert('enviado com sucesso!')
                     $("#conteudo_lista")
                         .val('')
-                    $("#btn_enviar_msg_list")
-                        .attr('disabled', false)
-                        .html('Enviar')
+                    $("#btn_enviar_msg_list").html('Enviar')
+
+
+                    $(".escolha_linha").attr('disabled', false)
+                    $("#midia").attr('disabled', false)
+                    $("#conteudo_lista").attr('disabled', false)
+                    $("#check_all").attr('disabled', false)
+
                 } else {
-                    let classe = $(".phones_enviar");
-                    let num = classe.eq(cont).data('num');
-                    let id = classe.eq(cont).data('id');
-                    let tk = classe.eq(cont).data('tk');
+                    let indice = ID_SELECIONADO[cont];
+                    let classe = $("#resp_" + indice);
+                    let num = classe.data('num');
+                    let id = classe.data('id');
+                    let tk = classe.data('tk');
                     let midia = $("#midia").val()
-                    $("#resp_" + num).html('ENVIADO COM SUCESSO!')
-                    enviandoMensagemLista(id, tk, num, msg, midia);
+                    classe.html('ENVIADO COM SUCESSO!')
+                    //enviandoMensagemLista(id, tk, num, msg, midia);
+
+                    console.log(id + ': ' + tk + ': ' + num + ': ' + msg + ': ' + midia)
+                    // configurações de envio
+
+                    $(".escolha_linha").attr('disabled', true)
+                    $("#midia").attr('disabled', true)
+                    $("#conteudo_lista").attr('disabled', true)
+                    $("#check_all").attr('disabled', true)
+
                 }
                 cont++;
 
-            }, 15000)
-
-
-
+            }, 3000)
         } else {
-            alert('Ops!\nTexto Vazio!')
+            alert('Ops!\nVerifique a mensagem e os destinatários')
             $("#conteudo_lista").focus()
         }
     })
@@ -114,67 +235,46 @@
             $("#btn_busca_lista").attr('disabled', true)
         }
         $("#btn_busca_lista").on('click', function(e) {
-            buscarLista(id, tk);
+            buscarLista(id, tk, valor);
             $("#btn_busca_lista")
                 .attr('disabled', true)
-                .html('...buscando')
+                .html('...atualizando')
         })
     })
 
 
-    function buscarLista(id, tk) {
+    function buscarLista(id, tk, valor) {
         $.ajax({
                 url: 'GERENCIA/zapio/listar_transmissao.php',
                 type: 'POST',
                 dataType: 'json',
                 data: {
                     ID: id,
-                    TOKEN: tk
+                    TOKEN: tk,
+                    CANAL: valor
                 },
             })
             .done(function(response) {
 
-                montarAreaLista(response)
+                atualizarLista(response)
             })
     }
 
-    function montarAreaLista(response) {
+    function atualizarLista(response) {
         let status = response.st;
-        let nomes = response.nomes;
-        let phones = response.phones;
-        let id = response.ID;
-        let token = response.TOKEN;
 
-        let corpo = "";
         if (status == 0) {
-            alert(response.msg)
-            $("#btn_busca_lista")
-                .attr('disabled', true)
-                .html('NÃO CONECTADO')
-        }
-        if (nomes == "" || phones == "") {
-            alert('Ops!\nEsse canal não possui lista ativa!')
+            alert('Ops! Aparelho desconectado')
         } else {
+            alert('Atualizado com sucesso!')
+
             $("#btn_busca_lista")
-                .attr('disabled', true)
-                .removeClass('btn-danger')
-                .addClass('btn-success')
-                .html('SUCESSO')
+                .attr('disabled', false)
+                .html('ATUALIZADO')
+            READ.listas_tranmissao();
 
-            for (let i = 0; i < phones.length; i++) {
-                corpo += `<tr>
-                <td>${nomes[i]}</td>
-                <td class='phones_enviar' 
-                data-num='${phones[i]}'
-                data-id='${id}'
-                data-tk='${token}'
-                id='resp_${phones[i]}'                
-                >aguardando envio</td></tr>`
-            }
-
-            $("#corpo_lista_transmissao").html(corpo)
-            $("#area_listas").show()
         }
+        console.log(response)
     }
 
     function enviandoMensagemLista(id, tk, num, msg, midia) {
@@ -190,12 +290,12 @@
                 url: 'GERENCIA/zapio/envio_listat.php',
                 type: 'POST',
                 dataType: 'json',
-                data:obj
+                data: obj
             })
             .done(function(response) {
 
                 console.log(response)
             })
-    
+
     }
 </script>

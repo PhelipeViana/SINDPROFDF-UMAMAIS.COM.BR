@@ -131,6 +131,9 @@ switch ($AUTH) {
 	case 30:
 		include "30_TAGEAMENTO_PASSO_A_PASSO.php";
 		break;
+		case 31:
+			include "31_LISTAS_TRANSMISSAO.php";
+			break;
 
 
 

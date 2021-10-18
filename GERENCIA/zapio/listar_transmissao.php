@@ -5,10 +5,11 @@ include "../../_conect.php";
 
 $ID = $_REQUEST['ID'];
 $TOKEN = $_REQUEST['TOKEN'];
+$CANAL = $_REQUEST['CANAL'];
+
 
 
 /*TESTANDO CONEXÃO*/
-
 
 
 $curl = curl_init();
@@ -35,6 +36,7 @@ if (!$pareamento) {
     echo json_encode(['msg' => 'APARELHO DESCONECTADO', 'st' => 0]);
     die();
 }
+
 
 
 
@@ -67,10 +69,12 @@ for ($i = 0; $i < count($response); $i++) {
 
         if (strpos($str, '-broadcast') !== false) {
 
-            $NOMES[] = $decoded[$k]->name;
-            $PHONES[] = $decoded[$k]->phone;
-       
+            $NOME = $decoded[$k]->name;
+            $PHONE = $decoded[$k]->phone;
+
+            $sql_insert = "INSERT INTO `listas_de_transmissao`(`phone_transmissao`, `nome_tranmissao`, `id_canal_transmissao`) VALUES ('$PHONE','$NOME','$CANAL')";
+            $exe = mysqli_query($conn, $sql_insert);
         }
     }
 }
-echo json_encode(['ID'=>$ID,'TOKEN'=>$TOKEN,'nomes' => $NOMES, 'phones' => $PHONES, 'st' => 1]);
+echo json_encode(['st' => 1]);

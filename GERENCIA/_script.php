@@ -10,6 +10,17 @@ $validador_usuario = $_SESSION['token']; //INSERIR O NOME DA SESSAO DO LOGADO
 
 <script>
 	const READ = {
+		listas_tranmissao: function() {
+			$.ajax({
+					url: '<?= $ENDPOINT; ?>',
+					type: 'POST',
+					dataType: 'json',
+					data: DADOS.PARS('31'),
+				})
+				.done(function(response) {
+					montarListaFixa(response)
+				})
+		},
 		tags_em_massa: function() {
 			$.ajax({
 					url: '<?= $ENDPOINT; ?>',
