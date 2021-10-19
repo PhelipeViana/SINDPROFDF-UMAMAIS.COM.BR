@@ -89,13 +89,13 @@
                     ID_SELECIONADO.push(id);
                     $("#linha_" + id).css('color', 'blue')
                 })
-            console.log(ID_SELECIONADO)
+           // console.log(ID_SELECIONADO)
 
         } else {
             $(".escolha_linha").prop("checked", false);
             ID_SELECIONADO = [];
             $(".linha").css('color', 'red')
-            console.log(ID_SELECIONADO)
+            //console.log(ID_SELECIONADO)
 
         }
     })
@@ -117,7 +117,7 @@
                 <td>${response[i].nome_tranmissao}</td>
                 <td class='st_envios'
                 data-num='${response[i].phone_transmissao}'
-                data-id='${response[i].id_canal_transmissao}'
+                data-id='${response[i].id_canalzapio}'
                 data-tk='${response[i].token_canalzapio}'
                 id='resp_${response[i].phone_transmissao}'>...</td>
                 </tr>`
@@ -148,8 +148,9 @@
                 let arr = ID_SELECIONADO.indexOf(id)
                 ID_SELECIONADO.splice(arr, 1);
                 $("#linha_" + id).css('color', 'red')
+
             }
-            console.log(ID_SELECIONADO)
+
 
         })
     }
@@ -158,29 +159,30 @@
 
     $("#conteudo_lista").keyup(function(e) {
         let txt = $(this).val();
-        if (txt.length > 0) {
+        if (txt.length > 0 && ID_SELECIONADO.length > 0) {
             $("#btn_enviar_msg_list").attr('disabled', false)
 
         } else {
             $("#btn_enviar_msg_list").attr('disabled', true)
         }
-        console.log()
+
     })
 
 
 
     $("#btn_enviar_msg_list").on('click', function(e) {
-        $("#btn_enviar_msg_list")
-            .attr('disabled', true)
-            .html('...enviando')
+
         $(".st_envios").html('...'); //altera o status quando faz outro envio
 
         let txt = $("#conteudo_lista").length;
         let msg = $("#conteudo_lista").val()
         let num_selecionado = ID_SELECIONADO.length;
-        if (msg.length > 0) {
+        if (msg.length > 0 && ID_SELECIONADO.length > 0) {
             let cont = 0;
             let nums = ID_SELECIONADO.length;
+            $("#btn_enviar_msg_list")
+                .attr('disabled', true)
+                .html('...enviando')
 
             let envio = setInterval(function() {
 
@@ -205,10 +207,9 @@
                     let tk = classe.data('tk');
                     let midia = $("#midia").val()
                     classe.html('ENVIADO COM SUCESSO!')
-                    //enviandoMensagemLista(id, tk, num, msg, midia);
-
-                    console.log(id + ': ' + tk + ': ' + num + ': ' + msg + ': ' + midia)
-                    // configurações de envio
+                    enviandoMensagemLista(id, tk, num, msg, midia);
+                    //console.log('ID-> '+id + 'TOKEN-> ' + tk + 'NUMERO-> ' + num);
+                    // configurações de envio id, tk, num, msg, midia
 
                     $(".escolha_linha").attr('disabled', true)
                     $("#midia").attr('disabled', true)
@@ -218,7 +219,7 @@
                 }
                 cont++;
 
-            }, 3000)
+            }, 20000)
         } else {
             alert('Ops!\nVerifique a mensagem e os destinatários')
             $("#conteudo_lista").focus()
@@ -274,7 +275,7 @@
             READ.listas_tranmissao();
 
         }
-        console.log(response)
+
     }
 
     function enviandoMensagemLista(id, tk, num, msg, midia) {

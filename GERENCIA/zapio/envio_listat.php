@@ -2,7 +2,7 @@
 $ID = $_REQUEST['ID'];
 $TK = $_REQUEST['TOKEN'];
 $NUMERO = $_REQUEST['NUMERO'];
-
+//$NUMERO ='5565996830909';
 $MIDIA = $_REQUEST['MIDIA'];
 
 
@@ -119,7 +119,7 @@ function imagemSend($ID, $TOKEN, $NUMERO, $URL_IMG, $MENSAGEM)
 
     $response = curl_exec($curl);
     curl_close($curl);
-    echo json_encode(['reponse'=>$response,'mensagem'=>$MENSAGEM,'num'=>$NUMERO]);
+    echo json_encode(['reponse' => $response, 'mensagem' => $MENSAGEM, 'num' => $NUMERO]);
 }
 
 function arquivoSend($ID, $TOKEN, $NUMERO, $URL_ARQUIVO, $EXT)
@@ -191,6 +191,7 @@ function videoSend($ID, $TOKEN, $NUMERO, $URL_VIDEO)
     ));
 
     $response = curl_exec($curl);
+    curl_close($curl);
 }
 
 
@@ -217,6 +218,6 @@ function MENSAGEM($ID, $TK, $NUMERO, $MENSAGEM)
     $response = curl_exec($curl);
     $data = json_decode($response, true);
     $msg_id_rc = $data['messageId'];
-
-    echo json_encode(['reponse'=>$response,'mensagem'=>$MENSAGEM,'num'=>$NUMERO]);
+    curl_close($curl);
+    echo json_encode(['reponse' => $response, 'mensagem' => $MENSAGEM, 'num' => $NUMERO]);
 }
