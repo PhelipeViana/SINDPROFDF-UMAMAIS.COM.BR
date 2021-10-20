@@ -19,13 +19,13 @@
 
         ?>
     </select>
-    <hr>
-
 
     <label class="text-center">TEXTO PARA ENVIAR</label>
     <textarea class='form-control' cols="30" rows="10" id="conteudo_lista"></textarea>
-
     <br>
+    <hr>
+    <button class="btn btn-block btn-danger" id="iniciar_testar">TESTAR ANTES</button>
+    <hr>
     <button class='btn btn-primary btn-block' id='btn_enviar_msg_list' disabled>Enviar</button>
     <br>
     <!-- 
@@ -71,12 +71,123 @@
         </tbody>
     </table>
 </div>
+<div class="modal fade" id="modal_teste_envio" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">TESTAR ENVIO DA LISTA</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <label for="">CANAL</label>
+                <select name="" id="seleciona_canal_teste" class="form-control">
+                    <option value="0">SELECIONE O CANAL</option>
+                    <?php
+                    $sql_canais = "SELECT * FROM `canaiszapio`";
+                    $exe_canais = mysqli_query($conn, $sql_canais);
+                    while ($r = mysqli_fetch_assoc($exe_canais)) {
+                    ?>
+                        <option value="<?= $r['idcanalzapio']; ?>" data-tk="<?= $r['token_canalzapio']; ?>" data-id="<?= $r['id_canalzapio']; ?>"><?= $r['nome_canalzapio']; ?>
+                        </option>
+                    <?php
+                    }
+                    ?>
+                </select>
+
+                <label for="">Numero</label>
+                <input type="text" id="numero_teste" class="form-control mask-phone">
+
+                <input type="hidden" id="token_envio_teste" value="0">
+                <input type="hidden" id="id_envio_teste" value="0">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id='btn_envia_teste'>ENVIAR TESTE</button>
+
+
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">FECHAR</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 
 <script>
     READ.listas_tranmissao();
     let ID_SELECIONADO = [];
+    $("#iniciar_testar").on('click', function(e) {
+        let cx_msg = $("#conteudo_lista").val()
+        if (cx_msg.length < 1) {
+            alert('ops! mensagem vazia')
+            $("#cx_msg").focus()
+        } else {
+            $("#modal_teste_envio").modal('show')
+        }
+    })
+
+    jQuery(document).ready(function($) {
+        $(".mask-phone").mask("(99) 99999-9999");
+    });
+    $("#seleciona_canal_teste").on('change', function(e) {
+        let valor = $("#seleciona_canal_teste").val()
+        let id = $("#seleciona_canal_teste :selected").data('id')
+        let tk = $("#seleciona_canal_teste :selected").data('tk')
+
+        if (valor > 0) {
+            $("#token_envio_teste").val(tk);
+            $("#id_envio_teste").val(id);
+            $("#btn_envia_teste").attr('disabled',false)
+
+        } else {
+            $("#token_envio_teste").val(0);
+            $("#id_envio_teste").val(0);
+            $("#btn_envia_teste").attr('disabled',true)
+        }
+    })
+
+    $("#btn_envia_teste").on('click', function(e) {
+        let tk = $("#token_envio_teste").val();
+        let id = $("#id_envio_teste").val();
+
+        let midia = $("#midia").val()
+        let cx_msg = $("#conteudo_lista").val()
+        let num1 = $("#numero_teste").val()
+        let num2 = num1.replace("(", "");
+        let num3 = num2.replace(")", "")
+        let num4 = num3.replace("-", "");
+        let num = '55' + num4.replace(" ", "");
+
+
+
+        if (tk == 0 || id == 0) {
+            alert('OPS! SELECIONE O CANAL');
+
+        } else {
+            //console.log('id: ' + id + ' tk: ' + tk + ' nome: ' + nome + ' numeroreplace: ' + num)
+            if (num.length < 13) {
+                alert('Ops! Número inválido')
+                $("#numero_teste")
+                    .focus()
+                    .css('color', 'red')
+            } else {
+                $("#btn_envia_teste")
+                    .attr('disabled', true)
+                    .html('...enviando')
+
+                enviandoMensagemLista(id, tk, num, cx_msg, midia);
+
+                $("#numero_teste").css('color', 'black')
+            }
+
+        }
+
+
+    })
 
     $("#check_all").on('click', function(e) {
         ID_SELECIONADO = [];
@@ -89,7 +200,7 @@
                     ID_SELECIONADO.push(id);
                     $("#linha_" + id).css('color', 'blue')
                 })
-           // console.log(ID_SELECIONADO)
+            // console.log(ID_SELECIONADO)
 
         } else {
             $(".escolha_linha").prop("checked", false);
@@ -198,6 +309,9 @@
                     $("#midia").attr('disabled', false)
                     $("#conteudo_lista").attr('disabled', false)
                     $("#check_all").attr('disabled', false)
+                    $("#iniciar_testar").attr('disabled', false)
+
+
 
                 } else {
                     let indice = ID_SELECIONADO[cont];
@@ -215,6 +329,7 @@
                     $("#midia").attr('disabled', true)
                     $("#conteudo_lista").attr('disabled', true)
                     $("#check_all").attr('disabled', true)
+                    $("#iniciar_testar").attr('disabled', true)
 
                 }
                 cont++;
@@ -294,6 +409,9 @@
                 data: obj
             })
             .done(function(response) {
+                $("#btn_envia_teste")
+                    .attr('disabled', false)
+                    .html('ENVIADO')
 
                 console.log(response)
             })
