@@ -66,8 +66,21 @@ if ($MSG_COMPARE == 'NAO DESEJO RECEBER MENSAGEM') {
 function naoReceberMensagem($phone)
 {
 	global $conn;
-	$sql = "UPDATE `carregamento_contato` SET `ativo`=2 WHERE `phone_carregamento`='$phone'";
-	$exe = mysqli_query($conn, $sql);
+	global $CANAL_RECEBIMENTO;
+	
+	 
+	$sql_pesquisa = "SELECT id_carregamento FROM `carregamento_contato` WHERE `phone_carregamento`='$phone'";
+	$exe_pesquisa = mysqli_query($conn, $sql_pesquisa);
+	$existe = mysqli_num_rows($exe_pesquisa);
+
+	if ($existe > 0) {
+		$sql_up = "UPDATE `carregamento_contato` SET `ativo`=2 WHERE `phone_carregamento`='$phone'";
+		$exe = mysqli_query($conn, $sql_up);
+	} else {
+		$sql_cre = "INSERT INTO `carregamento_contato`(`phone_carregamento`,IDREFCANAL,`ativo`) VALUES ('$phone','$CANAL_RECEBIMENTO',2)";
+		$exe = mysqli_query($conn, $sql_cre);
+
+	}
 }
 function FormatUpper($string)
 {
