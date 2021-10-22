@@ -9,3 +9,9 @@ $ST=$data["status"];
 
 $sql_status="UPDATE `listagem_envio` SET RETORNO_ZAPIO='$ST', json_list='$json' WHERE REF_ZAPIO='$ID'";
 $exe_status=mysqli_query($conn,$sql_status);
+
+
+/*alterando o status das enviadas*/
+
+$sql_enviadas="UPDATE `LOG_ENVIO` SET `status_log`='$ST' WHERE messageId='$ID'";
+$e_enviadas=mysqli_query($conn,$sql_enviadas);
