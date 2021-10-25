@@ -104,11 +104,11 @@ if (isset($limit) && !empty($limit)) {
 					$sql = "SELECT * FROM `listagem_envio` WHERE `REF_CAMP`='$id' and enviado=0 limit $LIMITE_CONTATOS";
 					$e = mysqli_query($conn, $sql);
 					$num_pendentes = mysqli_num_rows($e);
-
+					$i=1;
 					while ($r = mysqli_fetch_assoc($e)) {
 						?>
 						<tr>
-							<td><?= $r['id_list']; ?></td>
+							<td><?=$i?></td>
 							<td><?= $r['nome_list']; ?></td>
 							<td><?= $r['num_list']; ?></td>
 							<td class='resultado' data-nome='<?= $r['nome_list']; ?>' data-numero='<?= $r['num_list']; ?>' data-id='<?= $r['idzaio_list']; ?>' data-tk='<?= $r['tokenzapio_list']; ?>' data-reflist='<?= $r['id_list']; ?>'>
@@ -118,8 +118,8 @@ if (isset($limit) && !empty($limit)) {
 
 						</tr>
 
-
 						<?php
+						$i++;
 					}
 
 					?>

@@ -13,5 +13,5 @@ $exe_status=mysqli_query($conn,$sql_status);
 
 /*alterando o status das enviadas*/
 
-$sql_enviadas="UPDATE `LOG_ENVIO` SET `status_log`='$ST' WHERE messageId='$ID'";
+$sql_enviadas="UPDATE `LOG_ENVIO` SET `status_log`='$ST', json_log_recebimento='$json' WHERE messageId='$ID'";
 $e_enviadas=mysqli_query($conn,$sql_enviadas);

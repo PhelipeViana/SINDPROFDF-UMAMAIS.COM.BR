@@ -113,7 +113,7 @@
 			onclick="importarContatosTodaAgenda('<?=$row['id_canalzapio']?>',
 			'<?=$row['token_canalzapio']?>','<?=$row['idcanalzapio']?>')" id='btn_agenda<?=$row['idcanalzapio']?>' id='btnimportar'>
 			IMPORTAR MINHA AGENDA
-		</button> -->
+		</button> 
 	</div>
 </div>
 <script>
