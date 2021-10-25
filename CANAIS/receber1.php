@@ -6,10 +6,18 @@ $CANAL_RECEBIMENTO = 1; //ID DO CADASTRADO
 $decoded = json_decode($json, true);
 $phone = $decoded["phone"];
 $type = 1; //CODIGO DE MENSAGEM RECEBIDA
-$idmsg = $decoded["messageId"];
+
 $data_mensagem = date('Y-m-d H:i:s');
 $mensagem = noInjection($decoded["text"]["message"]);
 $foto_no_atendimento = $decoded["photo"];
+
+/*controle do aparelho no multi device*/
+$fromMe = $decoded["fromMe"];
+if ($fromMe) {
+	$idmsg = 'APARELHO';
+} else {
+	$idmsg = $decoded["messageId"];
+}
 
 
 
