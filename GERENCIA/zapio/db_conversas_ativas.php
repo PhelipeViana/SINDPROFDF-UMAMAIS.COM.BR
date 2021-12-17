@@ -11,7 +11,7 @@ $IDREFCANAL=$_REQUEST['IDREFCANAL'];
 
 
 
-$limitpage=11;
+$limitpage=20;
 
 for ($i=1; $i < $limitpage; $i++) { 
 	$curl = curl_init();
@@ -48,14 +48,16 @@ for($y=0;$y < count($PHONES);$y++){
 	$numeros=$PHONES[$y];
 	$fotos=$FOTOS[$y];
 
-	$sql="INSERT INTO `carregamento_contato` (
-	nome_carregamento,
-	foto_carregamento,
-	`phone_carregamento`, IDREFCANAL,tipo_carregamento) VALUES (
-	'$nomes',
-	'$fotos',
-	'$numeros',
-	'$IDREFCANAL',1)";
+	// $sql="INSERT INTO `carregamento_contato` (
+	// nome_carregamento,
+	// foto_carregamento,
+	// `phone_carregamento`, IDREFCANAL,tipo_carregamento) VALUES (
+	// '$nomes',
+	// '$fotos',
+	// '$numeros',
+	// '$IDREFCANAL',1)";
+	$sql="INSERT INTO `teste`(`nome_teste`, `numero_teste`) VALUES ('$nomes','$numeros')";
+
 	$execute=mysqli_query($conn,$sql);
 	if($execute){
 		$c++;

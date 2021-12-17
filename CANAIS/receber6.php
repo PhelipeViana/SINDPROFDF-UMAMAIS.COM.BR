@@ -2,7 +2,7 @@
 include "../_conect.php";
 
 $json = file_get_contents('php://input');
-$CANAL_RECEBIMENTO = 6; //ID DO CADASTRADO
+$CANAL_RECEBIMENTO = 2; //ID DO CADASTRADO
 $decoded = json_decode($json, true);
 $phone = $decoded["phone"];
 $type = 1; //CODIGO DE MENSAGEM RECEBIDA
@@ -126,50 +126,51 @@ if (!empty($decoded["sticker"])) {
 	$leitura = 'sticker';
 }
 
+if (!empty($leitura)) {
+	$sql = "INSERT INTO `MENSAGENS`(
+		`idzap`,
+		`phone`,
+		`mensagem`,
+		`tipo`,
+		`canal_mensagem`,data_mensagem,leitura) VALUES ('$idmsg','$phone','$mensagem','$type','$CANAL_RECEBIMENTO','$data_mensagem','$leitura')";
 
-$sql = "INSERT INTO `MENSAGENS`(
-`idzap`,
-`phone`,
-`mensagem`,
-`tipo`,
-`canal_mensagem`,data_mensagem,leitura) VALUES ('$idmsg','$phone','$mensagem','$type','$CANAL_RECEBIMENTO','$data_mensagem','$leitura')";
-
-$exe = mysqli_query($conn, $sql);
+	$exe = mysqli_query($conn, $sql);
 
 
-//verifica se já tem atendimento aberto
-$sql_v = "SELECT * FROM `atendimento_pendente` 
-WHERE phone_atendimento='$phone' AND `REF_CANAL_ENTRADA`='$CANAL_RECEBIMENTO'";
-$exe_v = mysqli_query($conn, $sql_v);
-$existe_atendimento = mysqli_num_rows($exe_v);
+	//verifica se já tem atendimento aberto
+	$sql_v = "SELECT * FROM `atendimento_pendente` 
+		WHERE phone_atendimento='$phone' AND `REF_CANAL_ENTRADA`='$CANAL_RECEBIMENTO'";
+	$exe_v = mysqli_query($conn, $sql_v);
+	$existe_atendimento = mysqli_num_rows($exe_v);
 
-if ($existe_atendimento  == 0) {
+	if ($existe_atendimento  == 0) {
 
-	$sql_atendimento = "INSERT INTO `atendimento_pendente`(`phone_atendimento`, 
-	`REF_ID_ATENDENTE`,
-	`REF_CANAL_ENTRADA`, 
-	`DATA_INICIO_CHAMADA`,foto_no_atendimento) VALUES ('$phone',0,'$CANAL_RECEBIMENTO','$data_mensagem',
-	'$foto_no_atendimento')";
+		$sql_atendimento = "INSERT INTO `atendimento_pendente`(`phone_atendimento`, 
+			`REF_ID_ATENDENTE`,
+			`REF_CANAL_ENTRADA`, 
+			`DATA_INICIO_CHAMADA`,foto_no_atendimento) VALUES ('$phone',0,'$CANAL_RECEBIMENTO','$data_mensagem',
+			'$foto_no_atendimento')";
 
-	$exe_atendimento = mysqli_query($conn, $sql_atendimento);
+		$exe_atendimento = mysqli_query($conn, $sql_atendimento);
 
-	if ($exe_atendimento) {
-		alertarFilaFirebase(); //atualiza a fila quando entra mensagem
+		if ($exe_atendimento) {
+			alertarFilaFirebase(); //atualiza a fila quando entra mensagem
+		}
 	}
-}
 
 
-/*EXISTE ATENDIMENTO*/
-$sql_id = "SELECT * FROM `atendimento_pendente` 
-WHERE `phone_atendimento`='$phone' and `REF_CANAL_ENTRADA`='$CANAL_RECEBIMENTO'";
-$exe_id = mysqli_query($conn, $sql_id);
-$exe_id_existe = mysqli_num_rows($exe_id);
-$row_id = mysqli_fetch_assoc($exe_id);
-$ID_DO_ATENDIMENTO = $row_id['id_atendimento'];
+	/*EXISTE ATENDIMENTO*/
+	$sql_id = "SELECT * FROM `atendimento_pendente` 
+		WHERE `phone_atendimento`='$phone' and `REF_CANAL_ENTRADA`='$CANAL_RECEBIMENTO'";
+	$exe_id = mysqli_query($conn, $sql_id);
+	$exe_id_existe = mysqli_num_rows($exe_id);
+	$row_id = mysqli_fetch_assoc($exe_id);
+	$ID_DO_ATENDIMENTO = $row_id['id_atendimento'];
 
-if ($exe_id_existe > 0) {
+	if ($exe_id_existe > 0) {
 
-	atualizaMensagemCanal($ID_DO_ATENDIMENTO);
+		atualizaMensagemCanal($ID_DO_ATENDIMENTO);
+	}
 }
 
 

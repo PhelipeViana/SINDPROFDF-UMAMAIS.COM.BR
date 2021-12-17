@@ -48,14 +48,16 @@ for($y=0;$y < count($PHONES);$y++){
 	$nomes=$NOMES[$y];
 	$numeros=$PHONES[$y];
 
-	$sql="INSERT INTO `carregamento_contato` (
-	nome_carregamento,
-	phone_carregamento, 
-	IDREFCANAL,
-	tipo_carregamento) VALUES (
-	'$nomes',
-	'$numeros',
-	'$IDREFCANAL',2)";
+	// $sql="INSERT INTO `carregamento_contato` (
+	// nome_carregamento,
+	// phone_carregamento, 
+	// IDREFCANAL,
+	// tipo_carregamento) VALUES (
+	// '$nomes',
+	// '$numeros',
+	// '$IDREFCANAL',2)";
+
+	$sql="INSERT INTO `agenda_rose`(`nome`, `numero`) VALUES ('$nomes','$numeros')";
 
 	$execute=mysqli_query($conn,$sql);
 	if($execute){

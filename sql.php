@@ -3,21 +3,19 @@
 // LIMPEZA DE DUPLICADOS NOS DISPAROS
 include "_conect.php";
 
-$sql="SELECT `REF_CADASTRO` FROM `hast_cadastro` WHERE `REF_HASTAG`=8";
-//$exe=mysqli_query($conn,$sql);
+$sub="SELECT `num_disparo` FROM `DISPAROS`";
 
+$sql="SELECT * FROM `MENSAGENS` WHERE `phone` in ($sub)";
+
+$exe=mysqli_query($conn,$sql);
+
+$num=mysqli_num_rows($exe);
 while ($row=mysqli_fetch_assoc($exe)) {
 	$dados[]=$row;
 }
+var_dump($dados);
 
 
-for ($i=0; $i < count($dados); $i++) { 
-  $id=$dados[$i]['REF_CADASTRO'];
-
-}
-
-
-//*
 /*
 VALIDA NUMERO
 $ID="39543B5E6D6A60CF599492E705D4F47B";
