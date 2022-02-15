@@ -9,9 +9,9 @@
 			GERENCIAR MINHAS <i class="fa fa-hashtag" aria-hidden="true"></i>HASTAG
 		</button>
 		<br>
-		<a href="TAGEAMENTO.php" target="_blank">
+		<!-- <a href="TAGEAMENTO.php" target="_blank">
 			<button class="btn btn-danger btn-block">TAGEAMENTO AUTOMÁTICO</button>
-		</a>
+		</a> -->
 		<hr>
 		<hr>
 		<div>

@@ -97,7 +97,7 @@
 
 		while ($row = mysqli_fetch_assoc($execute)) {
 			if ($row['idcanalzapio'] == '2') {
-				$btn = 'disabled';
+				//$btn = 'disabled';
 			} else {
 				$btn = '';
 			}

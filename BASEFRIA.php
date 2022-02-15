@@ -1,17 +1,30 @@
 <?php
 include '_conect.php';
+$data = date('Y-m-d');
 
-$SQL_CANAL = "SELECT * FROM `canaiszapio` WHERE `idcanalzapio`=1";
+$SQL_CANAL = "SELECT * FROM `canaiszapio` WHERE `idcanalzapio`=2";
 $EXE_CANAL = mysqli_query($conn, $SQL_CANAL);
 $ROW_CANAL = mysqli_fetch_assoc($EXE_CANAL);
 
 $ARRAY_GRUPO = ['0', 'APOSENTADOS', 'ATIVOS', 'ENCONTRADOS', 'EM_BRANCO'];
-$SELECIONADO="";
+$SELECIONADO = "";
+
+$limit = $_REQUEST['limit'];
+if (isset($limit) && !empty($limit)) {
+	if (is_numeric($limit)) {
+		$LIMITE_CONTATOS = $limit;
+	} else {
+		$LIMITE_CONTATOS = 100;
+	}
+} else {
+	$LIMITE_CONTATOS = 100;
+}
+
 ?>
 
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 
 <head>
 	<meta charset="UTF-8">
@@ -23,34 +36,40 @@ $SELECIONADO="";
 </head>
 
 <body>
+	<?php
+	$sql_envios_dia = "SELECT * FROM `LOG_ENVIO` WHERE `date` > '$data'";
+	$exe_envios_dia = mysqli_query($conn, $sql_envios_dia);
+	$num_envios = mysqli_num_rows($exe_envios_dia);
+	?>
 	<div class="container">
 		<h1 class="jumbotron text-center">CANAL DE ENVIO <?= $ROW_CANAL['nome_canalzapio'] ?></h1>
+		<p>MENSAGENS ENVIADAS NO DIA : <?=$num_envios?></p>
 		<div id="rel_status"></div>
 		<hr>
 		<div class="row text-center">
 			<label for="">Escolher Categoria: </label>
-			<a href='?'><button class='btn'>TODOS</button><a>
-			<?php
-			for ($num = 1; $num < count($ARRAY_GRUPO); $num++) {
-
-				if ($_GET['filtro'] == $ARRAY_GRUPO[$num]) {
-					$class = "btn-danger";
-					$SELECIONADO="AND grupo='".$num."'";
-				} else {
-					$class = "btn-secondary";
-				}
-
-
-			?>
-
-
-				<a href='?filtro=<?= $ARRAY_GRUPO[$num] ?>'><button class='btn <?= $class ?>'><?= $ARRAY_GRUPO[$num] ?></button><a>
-
-
-
+			<a href='?limit=<?= $limit ?>'><button class='btn'>TODOS</button><a>
 					<?php
-				}
+					for ($num = 1; $num < count($ARRAY_GRUPO); $num++) {
+
+						if ($_GET['filtro'] == $ARRAY_GRUPO[$num]) {
+							$class = "btn-danger";
+							$SELECIONADO = "AND grupo='" . $num . "'";
+						} else {
+							$class = "btn-secondary";
+						}
+
+
 					?>
+
+
+						<a href='?filtro=<?= $ARRAY_GRUPO[$num] . '&limit=100' ?>'><button class='btn <?= $class ?>'><?= $ARRAY_GRUPO[$num] ?></button><a>
+
+
+
+							<?php
+						}
+							?>
 		</div>
 		<hr>
 		<button class="btn btn-block btn-success" id="iniciar_acao">INICIAR</button>
@@ -118,7 +137,7 @@ $SELECIONADO="";
 					<?php
 
 
-					$sql = "SELECT * FROM `DISPAROS` WHERE `enviado`=0 $SELECIONADO limit 50 ";
+					$sql = "SELECT * FROM `DISPAROS` WHERE `enviado`=0 $SELECIONADO limit $limit ";
 					//$sql="SELECT * FROM `DISPAROS` WHERE `id_disparos`=31744";
 
 					$e = mysqli_query($conn, $sql);

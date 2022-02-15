@@ -27,7 +27,7 @@
 		</div>
 		<div class="divider"></div>
 		<ul class="nav menu"  role="tablist">
-			<li   class="active">
+			<li   >
 				<a  data-toggle="tab" href="#tela_midias" role="tab" aria-controls="home" aria-selected="true">
 					MIDIAS
 				</a>
@@ -43,6 +43,11 @@
 			<li>
 				<a  data-toggle="tab" href="#tela_base_dados" role="tab" aria-controls="home" aria-selected="true">
 					BASE DE DADOS
+				</a>
+			</li>
+			<li class="active">
+				<a  data-toggle="tab" href="#tela_dados_tags" role="tab" aria-controls="home" aria-selected="true">
+					DADOS TAGS
 				</a>
 			</li>
 			<li>

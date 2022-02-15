@@ -10,6 +10,17 @@ $validador_usuario = $_SESSION['token']; //INSERIR O NOME DA SESSAO DO LOGADO
 
 <script>
 	const READ = {
+		dadosTageamento: function() {
+			$.ajax({
+					url: '<?= $ENDPOINT; ?>',
+					type: 'POST',
+					dataType: 'json',
+					data: DADOS.PARS('32'),
+				})
+				.done(function(response) {
+					montarDadosTag(response);
+				})
+		},
 		listas_tranmissao: function() {
 			$.ajax({
 					url: '<?= $ENDPOINT; ?>',
@@ -182,6 +193,19 @@ $validador_usuario = $_SESSION['token']; //INSERIR O NOME DA SESSAO DO LOGADO
 
 	}
 	const CREATE = {
+		campanha_por_tag: function(tipo, id1, id2 = 0) {
+			$.ajax({
+					url: '<?= $ENDPOINT ?>',
+					type: 'POST',
+					dataType: 'json',
+					data: DADOS.PARS('33', tipo, id1, id2),
+				})
+				.done(function(response) {
+					alert('CAMPANHA '+response.id_camp+'\nCRIADA COM SUCESSO!\nCLICK NO MENU CAMPANHAS!');
+					READ.list_campanha();
+				})
+
+		},
 		novoatendente: function(form) {
 			$.ajax({
 					url: '<?= $ENDPOINT ?>',

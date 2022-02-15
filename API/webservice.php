@@ -131,14 +131,22 @@ switch ($AUTH) {
 	case 30:
 		include "30_TAGEAMENTO_PASSO_A_PASSO.php";
 		break;
-		case 31:
-			include "31_LISTAS_TRANSMISSAO.php";
-			break;
+	case 31:
+		include "31_LISTAS_TRANSMISSAO.php";
+		break;
+
+	case 32:
+		include "32_DADOS_TAGS.php";
+		break;
+
+	case 33:
+		include "33_CRIAR_CAMPANHA_TAG.php";
+		break;
 
 
 
 
 	default:
-		echo json_encode(['msg' => 'nok1']);
+		echo json_encode(['msg' => 'nok']);
 		break;
 }

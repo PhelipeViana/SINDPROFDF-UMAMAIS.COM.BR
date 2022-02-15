@@ -52,6 +52,25 @@ if (isset($limit) && !empty($limit)) {
 		</a>
 		<hr>
 		<div id="area_de_envio">
+
+			<label for="">CANAL DE ENVIO</label>
+			<select name="" id="seleciona_canal_envio" class="form-control" required>
+				<option value="0">Selecione um canal</option>
+				<?php
+				$sql_canais = "SELECT * FROM `canaiszapio`";
+				$exe_canais = mysqli_query($conn, $sql_canais);
+				while ($r = mysqli_fetch_assoc($exe_canais)) {
+				?>
+					<option value="<?= $r['idcanalzapio']; ?>" data-tk="<?= $r['token_canalzapio']; ?>" data-id="<?= $r['id_canalzapio']; ?>"><?= $r['nome_canalzapio']; ?>
+					</option>
+				<?php
+				}
+				?>
+			</select>
+			<input type="hidden" id="tk_envio">
+			<input type="hidden" id="id_envio">
+
+
 			<label for="">Tipo de mensagem</label>
 			<select id="midia" class="form-control">
 				<option value="0">ENVIAR SOMENTE TEXTO</option>
@@ -61,9 +80,9 @@ if (isset($limit) && !empty($limit)) {
 				$e_arq = mysqli_query($conn, $sql_arq);
 
 				while ($row = mysqli_fetch_assoc($e_arq)) {
-					?>
+				?>
 					<option value="<?= $row['linkArquivo'] ?>"><?= $row['nomeArquivo'] ?> + TEXTO</option>
-					<?php
+				<?php
 				}
 
 				?>
@@ -104,11 +123,11 @@ if (isset($limit) && !empty($limit)) {
 					$sql = "SELECT * FROM `listagem_envio` WHERE `REF_CAMP`='$id' and enviado=0 limit $LIMITE_CONTATOS";
 					$e = mysqli_query($conn, $sql);
 					$num_pendentes = mysqli_num_rows($e);
-					$i=1;
+					$i = 1;
 					while ($r = mysqli_fetch_assoc($e)) {
-						?>
+					?>
 						<tr>
-							<td><?=$i?></td>
+							<td><?= $i ?></td>
 							<td><?= $r['nome_list']; ?></td>
 							<td><?= $r['num_list']; ?></td>
 							<td class='resultado' data-nome='<?= $r['nome_list']; ?>' data-numero='<?= $r['num_list']; ?>' data-id='<?= $r['idzaio_list']; ?>' data-tk='<?= $r['tokenzapio_list']; ?>' data-reflist='<?= $r['id_list']; ?>'>
@@ -118,7 +137,7 @@ if (isset($limit) && !empty($limit)) {
 
 						</tr>
 
-						<?php
+					<?php
 						$i++;
 					}
 
@@ -147,81 +166,94 @@ if (isset($limit) && !empty($limit)) {
 						$sql_canais = "SELECT * FROM `canaiszapio`";
 						$exe_canais = mysqli_query($conn, $sql_canais);
 						while ($r = mysqli_fetch_assoc($exe_canais)) {
-							?>
+						?>
 							<option value="<?= $r['idcanalzapio']; ?>" data-tk="<?= $r['token_canalzapio']; ?>" data-id="<?= $r['id_canalzapio']; ?>"><?= $r['nome_canalzapio']; ?>
-						</option>
+							</option>
 						<?php
-					}
-					?>
-				</select>
-				<label for="">Nome</label>
-				<input type="text" id="nome_teste" class="form-control">
-				<label for="">Numero</label>
-				<input type="text" id="numero_teste" class="form-control mask-phone">
+						}
+						?>
+					</select>
+					<label for="">Nome</label>
+					<input type="text" id="nome_teste" class="form-control">
+					<label for="">Numero</label>
+					<input type="text" id="numero_teste" class="form-control mask-phone">
 
-				<input type="hidden" id="token_envio_teste" value="0">
-				<input type="hidden" id="id_envio_teste" value="0">
+					<input type="hidden" id="token_envio_teste" value="0">
+					<input type="hidden" id="id_envio_teste" value="0">
 
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-primary" id='btn_envia_teste'>ENVIAR TESTE</button>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" id='btn_envia_teste'>ENVIAR TESTE</button>
 
 
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">FECHAR</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">FECHAR</button>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 
-<script>
-	jQuery(document).ready(function($) {
-		$(".mask-phone").mask("(99) 99999-9999");
-	});
-
-
-	$("#seleciona_canal_teste").on('change', function(e) {
-		let valor = $("#seleciona_canal_teste").val()
-		let id = $("#seleciona_canal_teste :selected").data('id')
-		let tk = $("#seleciona_canal_teste :selected").data('tk')
-
-		if (valor > 0) {
-			$("#token_envio_teste").val(tk);
-			$("#id_envio_teste").val(id);
-
-		} else {
-			$("#token_envio_teste").val(0);
-			$("#id_envio_teste").val(0);
-		}
-	})
-
-	$("#btn_envia_teste").on('click', function(e) {
-		let tk = $("#token_envio_teste").val();
-		let id = $("#id_envio_teste").val();
-		let nome = $("#nome_teste").val()
-		let midia = $("#midia").val()
-		let cx_msg = $("#txt_mensagem").val()
-		let num1 = $("#numero_teste").val()
-		let num2 = num1.replace("(", "");
-		let num3 = num2.replace(")", "")
-		let num4 = num3.replace("-", "");
-		let num = '55' + num4.replace(" ", "");
+	<script>
+		jQuery(document).ready(function($) {
+			$(".mask-phone").mask("(99) 99999-9999");
+		});
 
 
+		$("#seleciona_canal_teste").on('change', function(e) {
+			let valor = $("#seleciona_canal_teste").val()
+			let id = $("#seleciona_canal_teste :selected").data('id')
+			let tk = $("#seleciona_canal_teste :selected").data('tk')
 
-		if (tk == 0 || id == 0) {
-			alert('OPS! SELECIONE O CANAL');
+			if (valor > 0) {
+				$("#token_envio_teste").val(tk);
+				$("#id_envio_teste").val(id);
 
-		} else {
+			} else {
+				$("#token_envio_teste").val(0);
+				$("#id_envio_teste").val(0);
+			}
+		})
+
+		let ID = 0;
+		let TK = 0;
+		$("#seleciona_canal_envio").on('change', function(e) {
+			let valor = $("#seleciona_canal_envio").val()
+
+			let ID = $("#seleciona_canal_envio :selected").data('id')
+			let TK = $("#seleciona_canal_envio :selected").data('tk')
+			$("#tk_envio").val(TK);
+			$("#id_envio").val(ID);
+
+		})
+
+
+		$("#btn_envia_teste").on('click', function(e) {
+			let tk = $("#token_envio_teste").val();
+			let id = $("#id_envio_teste").val();
+			let nome = $("#nome_teste").val()
+			let midia = $("#midia").val()
+			let cx_msg = $("#txt_mensagem").val()
+			let num1 = $("#numero_teste").val()
+			let num2 = num1.replace("(", "");
+			let num3 = num2.replace(")", "")
+			let num4 = num3.replace("-", "");
+			let num = '55' + num4.replace(" ", "");
+
+
+
+			if (tk == 0 || id == 0) {
+				alert('OPS! SELECIONE O CANAL');
+
+			} else {
 				//console.log('id: ' + id + ' tk: ' + tk + ' nome: ' + nome + ' numeroreplace: ' + num)
 				if (num.length < 13) {
 					alert('Ops! Número inválido')
 					$("#numero_teste")
-					.focus()
-					.css('color', 'red')
+						.focus()
+						.css('color', 'red')
 				} else {
 					$("#btn_envia_teste")
-					.attr('disabled', true)
-					.html('...enviado')
+						.attr('disabled', true)
+						.html('...enviado')
 					processandoEnvio(nome, num, id, tk, 0, midia, cx_msg, 0);
 					$("#numero_teste").css('color', 'black')
 				}
@@ -230,63 +262,64 @@ if (isset($limit) && !empty($limit)) {
 
 
 		})
-	$("#form_teste_envio").submit(function(e) {
-		e.preventDefault()
-		console.log($(this).serialize())
-	})
-
-
-	$("#iniciar_testar").on('click', function(e) {
-		let cx_msg = $("#txt_mensagem").val()
-		if (cx_msg.length < 1) {
-			alert('ops! mensagem vazia')
-			$("#cx_msg").focus()
-		} else {
-			$("#modal_teste_envio").modal('show')
-		}
-	})
-	let envio = "";
-	let pendentes_envios = "<?= $num_pendentes ?>";
-	if (pendentes_envios < 1) {
-		alert('CAMPANHA JÁ FINALIZADA');
-		$("#iniciar_acao")
-		.html('ENVIO CONCLUIDO')
-		.removeClass('btn-success')
-		.addClass('btn-danger')
-		.on('click', function(e) {
-			alert('CAMPANHA JÁ FINALIZADA');
-
+		$("#form_teste_envio").submit(function(e) {
+			e.preventDefault()
+			console.log($(this).serialize())
 		})
-		$("#area_de_envio").hide()
-	} else {
-		$("#iniciar_acao").on('click', function(e) {
-			let qtde = $('.resultado').length;
-			let contador = 0;
-			let contador_console = contador + 1
-			let tempo = 1000;
-			let btn_acao = $("#iniciar_acao");
-
-			let MSG = $("#txt_mensagem").val()
-			if (MSG.length > 3) {
-				btn_acao.attr('disabled', true).text('iniciando....')
-				$("#reiniciar").show()
-
-				let envio = setInterval(function() {
-					let variavel = $('.resultado').eq(contador);
-					variavel.html('<button class="btn btn-success btn-block">ENVIADO!</button>');
-					let proxima_variavel = $('.resultado').eq(contador + 1);
-					proxima_variavel.html('<button class="btn btn-secondary btn-block">ENVIANDO....</button>');
 
 
-					btn_acao.text(contador_console + " / " + qtde);
+		$("#iniciar_testar").on('click', function(e) {
+			let cx_msg = $("#txt_mensagem").val()
+			if (cx_msg.length < 1) {
+				alert('ops! mensagem vazia')
+				$("#cx_msg").focus()
+			} else {
+				$("#modal_teste_envio").modal('show')
+			}
+		})
+		let envio = "";
+		let pendentes_envios = "<?= $num_pendentes ?>";
+		if (pendentes_envios < 1) {
+			alert('CAMPANHA JÁ FINALIZADA');
+			$("#iniciar_acao")
+				.html('ENVIO CONCLUIDO')
+				.removeClass('btn-success')
+				.addClass('btn-danger')
+				.on('click', function(e) {
+					alert('CAMPANHA JÁ FINALIZADA');
+
+				})
+			$("#area_de_envio").hide()
+		} else {
+			$("#iniciar_acao").on('click', function(e) {
+				let qtde = $('.resultado').length;
+				let contador = 0;
+				let contador_console = contador + 1
+				let tempo = 1000;
+				let btn_acao = $("#iniciar_acao");
+
+				let MSG = $("#txt_mensagem").val()
+				if (MSG.length > 3) {
+					btn_acao.attr('disabled', true).text('iniciando....')
+					$("#reiniciar").show()
+
+					let envio = setInterval(function() {
+						let variavel = $('.resultado').eq(contador);
+						variavel.html('<button class="btn btn-success btn-block">ENVIADO!</button>');
+						let proxima_variavel = $('.resultado').eq(contador + 1);
+						proxima_variavel.html('<button class="btn btn-secondary btn-block">ENVIANDO....</button>');
+
+
+						btn_acao.text(contador_console + " / " + qtde);
 
 						//chamar a funcao de envio
 
 
 						let NOME = variavel.data('nome');
 						let NUM = variavel.data('numero');
-						let ID = variavel.data('id');
-						let TK = variavel.data('tk');
+						let ID = $("#id_envio").val();
+						let TK = $("#tk_envio").val();
+
 						let REF_LIST = variavel.data('reflist');
 
 
@@ -299,10 +332,13 @@ if (isset($limit) && !empty($limit)) {
 						} else {
 							tempo += 1000
 						}
+						if (ID == 0) {
+							alert('CANAL INVÁLIDO!')
+						} else {
+							processandoEnvio(NOME, NUM, ID, TK, IDCAMPANHA, midia, MSG, REF_LIST);
+							console.log(ID+' TK: '+TK)
+						}
 
-
-
-						processandoEnvio(NOME, NUM, ID, TK, IDCAMPANHA, midia, MSG, REF_LIST);
 
 
 						contador++;
@@ -313,75 +349,76 @@ if (isset($limit) && !empty($limit)) {
 						}
 					}, 10000);
 
-			} else {
-				$("#txt_mensagem").focus()
-				alert('Mensagem vazia')
-			}
+				} else {
+					$("#txt_mensagem").focus()
+					alert('Mensagem vazia')
+				}
 
-		})
-
-
-
-
-	}
-
-	$("#pnome").on('click', function(e) {
-		let input = $("#txt_mensagem")
-		let valor = input.val();
-		input
-		.val(valor + ' ' + ' <pnome> ')
-		.focus()
-	})
-
-
-	$("#ncompleto").on('click', function(e) {
-		let input = $("#txt_mensagem")
-		let valor = input.val();
-		input
-		.val(valor + ' ' + ' <nome> ')
-		.focus()
-	})
+			})
 
 
 
 
-	function processandoEnvio(NOME, NUM, ID, TK, IDCAMPANHA, midia, MSG, REF_LIST) {
-		let obj = {
-			NOME: NOME,
-			NUM: NUM,
-			ID: ID,
-			TK: TK,
-			IDCAMPANHA: IDCAMPANHA,
-			midia: midia,
-			MSG: MSG,
-			REF_LIST: REF_LIST
 		}
-		$.ajax({
-			url: 'RETORNO_CAMPANHA.php',
-			type: 'POST',
-			dataType: 'json',
-			data: obj
-		})
-		.done(function(response) {
-			let status = response.st
-			if (status == 0) {
-				clearInterval(envio);
-				alert('SEM CONEXÃO!!!')
-				location.assign('CAMPANHA_ENVIO.php?id=<?= $id ?>');
-			}
 
-
-			if (obj.REF_LIST == 0) {
-				alert('TESTE ENVIADO COM SUCESSO!')
-				$("#btn_envia_teste")
-				.attr('disabled', false)
-				.html('ENVIAR TESTE')
-			}
+		$("#pnome").on('click', function(e) {
+			let input = $("#txt_mensagem")
+			let valor = input.val();
+			input
+				.val(valor + ' ' + ' <pnome> ')
+				.focus()
 		})
 
 
-	}
-</script>
+		$("#ncompleto").on('click', function(e) {
+			let input = $("#txt_mensagem")
+			let valor = input.val();
+			input
+				.val(valor + ' ' + ' <nome> ')
+				.focus()
+		})
+
+
+
+
+		function processandoEnvio(NOME, NUM, ID, TK, IDCAMPANHA, midia, MSG, REF_LIST) {
+
+			let obj = {
+				NOME: NOME,
+				NUM: NUM,
+				ID: ID,
+				TK: TK,
+				IDCAMPANHA: IDCAMPANHA,
+				midia: midia,
+				MSG: MSG,
+				REF_LIST: REF_LIST
+			}
+			$.ajax({
+					url: 'RETORNO_CAMPANHA.php',
+					type: 'POST',
+					dataType: 'json',
+					data: obj
+				})
+				.done(function(response) {
+					let status = response.st
+					if (status == 0) {
+						clearInterval(envio);
+						alert('SEM CONEXÃO!!!')
+						location.assign('CAMPANHA_ENVIO.php?id=<?= $id ?>');
+					}
+
+
+					if (obj.REF_LIST == 0) {
+						alert('TESTE ENVIADO COM SUCESSO!')
+						$("#btn_envia_teste")
+							.attr('disabled', false)
+							.html('ENVIAR TESTE')
+					}
+				})
+
+
+		}
+	</script>
 </body>
 
 </html>
