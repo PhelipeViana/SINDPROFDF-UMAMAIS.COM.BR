@@ -96,7 +96,7 @@ $row = mysqli_fetch_assoc($exe);
 	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
 		<div class="tab-content" id="myTabContent">
 
-			<div class="tab-pane fade" id="tela_midias" role="tabpanel" aria-labelledby="home-tab">
+			<div class="tab-pane fade     active in" id="tela_midias" role="tabpanel" aria-labelledby="home-tab">
 				<?php include "GERENCIA/midia.php"; ?>
 
 			</div>
@@ -105,7 +105,7 @@ $row = mysqli_fetch_assoc($exe);
 				<?php include "GERENCIA/basededados.php"; ?>
 			</div>
 
-			<div class="tab-pane fade    active in" id="tela_dados_tags" role="tabpanel" aria-labelledby="home-tab">
+			<div class="tab-pane fade" id="tela_dados_tags" role="tabpanel" aria-labelledby="home-tab">
 				<?php include "GERENCIA/dadostag.php"; ?>
 			</div>
 
