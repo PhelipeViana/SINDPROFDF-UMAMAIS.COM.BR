@@ -117,7 +117,7 @@ if (is_numeric($ID_REL)) {
 			<tbody>
 
 				<?php
-				$sql_rel_dia = "SELECT distinct(DATE(data_update)) AS date, COUNT(*) as num FROM `listagem_envio` WHERE `REF_CAMP` = 32 and enviado=1 GROUP BY DATE(data_update)";
+				$sql_rel_dia = "SELECT distinct(DATE(data_update)) AS date, COUNT(*) as num FROM `listagem_envio` WHERE `REF_CAMP` = '$ID_REL' and enviado=1 GROUP BY DATE(data_update)";
 				$exe_rel_dia = mysqli_query($conn, $sql_rel_dia);
 
 				while ($row = mysqli_fetch_assoc($exe_rel_dia)) {
