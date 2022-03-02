@@ -1,6 +1,6 @@
 <?php 
 include '_validar.php';
-verificar()
+verificar();
 
 
 ?>
